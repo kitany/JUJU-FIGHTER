@@ -1,0 +1,184 @@
+class Encounter extends Phaser.Scene {
+  constructor() {
+    super('encounterScene')
+  }
+
+  init() {
+    // dialog constants
+    this.DBOX_X = 25		        // dialog box x-position
+    this.DBOX_Y = 400			    // dialog box y-position
+    this.DBOX_FONT = 'altone_bold'	    // dialog box font key
+
+    this.TEXT_X = 50			    // text w/in dialog box x-position
+    this.TEXT_Y = 445			    // text w/in dialog box y-position
+    this.TEXT_SIZE = 32		        // text font size (in pixels)
+    this.TEXT_MAX_WIDTH = 715	    // max width of text within box
+
+    this.NEXT_TEXT = '[SPACE]'	    // text to display for next prompt
+    this.NEXT_X = 745			    // next text prompt x-position
+    this.NEXT_Y = 574			    // next text prompt y-position
+
+    this.LETTER_TIMER = 10		    // # ms each letter takes to "type" onscreen
+
+    // dialog variables
+    this.dialogConvo = 0			// current "conversation"
+    this.dialogLine = 0			    // current line of conversation
+    this.dialogSpeaker = null		// current speaker
+    this.dialogLastSpeaker = null	// last speaker
+    this.dialogTyping = false		// flag to lock player input while text is "typing"
+    this.dialogText = null			// the actual dialog text
+    this.nextText = null			// player prompt text to continue typing
+    this.dialogDone = false
+
+    // character variables
+    this.tweenDuration = 500        // character in/out tween duration
+
+    this.OFFSCREEN_X = -500         // x,y coordinates used to place characters offscreen
+    this.OFFSCREEN_Y = 1300
+  }
+
+  create() {
+    this.bgimg = this.add.tileSprite(0,0, 800, 600, 'bgimg').setOrigin(0, 0)
+    this.bgimg.setScale(1.8)
+
+    this.hero = new Hero(this, this.OFFSCREEN_X, 750, 'hero') // 150
+    this.enemy = new Hero(this, this.OFFSCREEN_Y, 690, 'enemy') // 650
+    this.hero.sprite.setScale(1).setTint()
+    this.enemy.sprite.setScale(1)
+
+    // parse dialog from JSON file
+    this.dialog = this.cache.json.get('dialog')
+
+    // add dialog box sprite
+    this.dialogbox = this.add.sprite(this.DBOX_X, this.DBOX_Y, 'dialogbox').setOrigin(0)
+
+    // initialize dialog text objects (with no text)
+    this.dialogText = this.add.bitmapText(this.TEXT_X, this.TEXT_Y, this.DBOX_FONT, '', this.TEXT_SIZE)
+    this.nextText = this.add.bitmapText(this.NEXT_X, this.NEXT_Y, this.DBOX_FONT, '', this.TEXT_SIZE)
+
+    this.tweens.add({
+      targets: this.hero.sprite,
+      x: 150,
+      duration: this.tweenDuration,
+      ease: 'Linear'
+    })
+
+    this.tweens.add({
+      targets: this.enemy.sprite,
+      x: 650,
+      duration: this.tweenDuration,
+      ease: 'Linear'
+    })
+
+    // ready the character dialog images offscreen
+    // this.homer = this.add.sprite(this.OFFSCREEN_X, this.DBOX_Y+8, 'homer').setOrigin(0, 1)
+    // this.minerva = this.add.sprite(this.OFFSCREEN_X, this.DBOX_Y+8, 'minerva').setOrigin(0, 1)
+   
+    // input
+    cursors = this.input.keyboard.createCursorKeys()
+
+    // start first dialog conversation
+    this.typeText()        
+  }
+
+  update() {
+    if(Phaser.Input.Keyboard.JustDown(cursors.space) && !this.dialogTyping) {
+      this.typeText() // trigger dialog
+      this.sound.play('blip_02', {volume: 1.0})
+    }
+
+    if(Phaser.Input.Keyboard.JustDown(cursors.space) && this.dialogDone) {
+      this.sound.play('blip_02', {volume: 1.0})
+      this.scene.start('playScene')
+    }
+  }
+
+  typeText() {
+    // lock input while typing
+    this.dialogTyping = true
+
+    // clear text
+    this.dialogText.text = ''
+    this.nextText.text = ''
+
+    // make sure there are lines left to read in this convo, otherwise jump to next convo
+    if(this.dialogLine > this.dialog[this.dialogConvo].length - 1) {
+      this.dialogLine = 0
+      // I increment the conversation count here...
+      // ..but you could create logic to exit if each conversation was self-contained
+      this.dialogConvo++
+    }
+    
+    // make sure we haven't run out of conversations...
+    if(this.dialogConvo >= this.dialog.length) {
+      // here I'm exiting the final conversation to return to the title...
+      // ...but you could add alternate logic if needed
+      
+      //console.log('End of Conversations')
+      this.dialogDone = true
+
+      // tween out prior speaker's image
+      if(this.dialogLastSpeaker) {
+        this.tweens.add({
+          targets: this[this.dialogLastSpeaker],
+          x: this.OFFSCREEN_X,
+          duration: this.tweenDuration,
+          ease: 'Linear',
+          onComplete: () => {
+              this.scene.start('playScene')
+          }
+        })
+      }
+      // make text box invisible
+      this.dialogbox.visible = false
+
+    } else {
+      // if not, set current speaker
+      this.dialogSpeaker = this.dialog[this.dialogConvo][this.dialogLine]['speaker']
+      // check if there's a new speaker (for exit/enter animations)
+      if(this.dialog[this.dialogConvo][this.dialogLine]['newSpeaker']) {
+        // tween in new speaker's image
+        // this.tweens.add({
+        //   targets: this[this.dialogSpeaker],
+        //   x: this.DBOX_X + 50,
+        //   duration: this.tweenDuration,
+        //   ease: 'Linear'
+        // })
+      }
+
+
+      // build dialog (concatenate speaker + colon + line of text)
+      this.combinedDialog = 
+        this.dialog[this.dialogConvo][this.dialogLine]['speaker'].toUpperCase() 
+        + ': ' 
+        + this.dialog[this.dialogConvo][this.dialogLine]['dialog']
+
+      // create a timer to iterate through each letter in the dialog text
+      let currentChar = 0
+      this.textTimer = this.time.addEvent({
+        delay: this.LETTER_TIMER,
+        repeat: this.combinedDialog.length - 1,
+        callback: () => { 
+          // concatenate next letter from dialogLines
+          this.dialogText.text += this.combinedDialog[currentChar]
+          // advance character position
+          currentChar++
+          // check if timer has exhausted its repeats 
+          // (necessary since Phaser 3 no longer seems to have an onComplete event)
+          if(this.textTimer.getRepeatCount() == 0) {
+            // show prompt for more text
+            this.nextText = this.add.bitmapText(this.NEXT_X, this.NEXT_Y, this.DBOX_FONT, this.NEXT_TEXT, this.TEXT_SIZE).setOrigin(1)
+            this.dialogTyping = false   // un-lock input
+            this.textTimer.destroy()    // destroy timer
+          }
+        },
+        callbackScope: this // keep Scene context
+      })
+        
+      // final cleanup before next iteration
+      this.dialogText.maxWidth = this.TEXT_MAX_WIDTH  // set bounds on dialog
+      this.dialogLine++                               // increment dialog line
+      this.dialogLastSpeaker = this.dialogSpeaker     // set past speaker
+    }
+  }
+}

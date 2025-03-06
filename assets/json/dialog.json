@@ -1,0 +1,23 @@
+[
+	[
+		{
+			"speaker" : "enemy",
+			"dialog" : "Halt! Hero you shall not pass unless you defeat me."
+		},
+    {
+      "speaker" : "hero",
+			"dialog" : "I have always wanted to meet a formidable opponent!",
+			"newSpeaker" : "true"
+    },
+    {
+			"speaker" : "enemy",
+			"dialog" : "You talk arrogantly, hero! Stand your ground or prepare to be defeated!",
+			"newSpeaker" : "true"
+		},
+    {
+			"speaker" : "hero",
+			"dialog" : "[insert haughty remark]",
+			"newSpeaker" : "true"
+		}
+  ]
+]
