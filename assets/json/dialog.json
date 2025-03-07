@@ -2,7 +2,7 @@
 	[
 		{
 			"speaker" : "enemy",
-			"dialog" : "Halt! Hero you shall not pass unless you defeat me."
+			"dialog" : "Halt! Hero, you shall not pass unless you defeat me."
 		},
     {
       "speaker" : "hero",

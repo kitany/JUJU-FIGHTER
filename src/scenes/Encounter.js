@@ -10,9 +10,14 @@ class Encounter extends Phaser.Scene {
     this.DBOX_FONT = 'altone_bold'	    // dialog box font key
 
     this.TEXT_X = 50			    // text w/in dialog box x-position
-    this.TEXT_Y = 445			    // text w/in dialog box y-position
+    this.TEXT_Y = 460 		    // text w/in dialog box y-position
     this.TEXT_SIZE = 32		        // text font size (in pixels)
     this.TEXT_MAX_WIDTH = 715	    // max width of text within box
+
+    this.SPEAKER_X = centerX			    // text w/in dialog box x-position
+    this.SPEAKER_Y = 408		    // text w/in dialog box y-position
+    this.SPEAKER_SIZE = 64
+    this.SPEAKER_FONT = 'fantasy_black'	   // speaker name font key
 
     this.NEXT_TEXT = '[SPACE]'	    // text to display for next prompt
     this.NEXT_X = 745			    // next text prompt x-position
@@ -55,6 +60,7 @@ class Encounter extends Phaser.Scene {
     // initialize dialog text objects (with no text)
     this.dialogText = this.add.bitmapText(this.TEXT_X, this.TEXT_Y, this.DBOX_FONT, '', this.TEXT_SIZE)
     this.nextText = this.add.bitmapText(this.NEXT_X, this.NEXT_Y, this.DBOX_FONT, '', this.TEXT_SIZE)
+    this.speakerName = this.add.bitmapText(this.SPEAKER_X, this.SPEAKER_Y, this.SPEAKER_FONT, '', this.SPEAKER_SIZE).setOrigin(0.5, 0)
 
     this.tweens.add({
       targets: this.hero.sprite,
@@ -100,6 +106,7 @@ class Encounter extends Phaser.Scene {
     // clear text
     this.dialogText.text = ''
     this.nextText.text = ''
+    this.speakerName.destroy()
 
     // make sure there are lines left to read in this convo, otherwise jump to next convo
     if(this.dialogLine > this.dialog[this.dialogConvo].length - 1) {
@@ -147,21 +154,22 @@ class Encounter extends Phaser.Scene {
         });
       }
 
+      this.speakerName = 
+      this.add.bitmapText(this.SPEAKER_X, this.SPEAKER_Y, this.SPEAKER_FONT,
+        `${this.dialog[this.dialogConvo][this.dialogLine]['speaker'].toUpperCase()}`,
+        this.SPEAKER_SIZE).setOrigin(0.5, 0)
 
       // build dialog (concatenate speaker + colon + line of text)
-      this.combinedDialog = 
-        this.dialog[this.dialogConvo][this.dialogLine]['speaker'].toUpperCase() 
-        + ': ' 
-        + this.dialog[this.dialogConvo][this.dialogLine]['dialog']
+      this.speakerDialog = this.dialog[this.dialogConvo][this.dialogLine]['dialog']
 
       // create a timer to iterate through each letter in the dialog text
       let currentChar = 0
       this.textTimer = this.time.addEvent({
         delay: this.LETTER_TIMER,
-        repeat: this.combinedDialog.length - 1,
+        repeat: this.speakerDialog.length - 1,
         callback: () => { 
           // concatenate next letter from dialogLines
-          this.dialogText.text += this.combinedDialog[currentChar]
+          this.dialogText.text += this.speakerDialog[currentChar]
           // advance character position
           currentChar++
           // check if timer has exhausted its repeats 
