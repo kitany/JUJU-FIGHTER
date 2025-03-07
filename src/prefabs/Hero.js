@@ -2,17 +2,15 @@ class Hero extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y, texture, frame) {
     super(scene, x, y, texture, frame)
 
-    // this.sprite = scene.physics.add.sprite(x, y, texture)
-    // this.sprite.setOrigin(0.5, 0.5)
-    // this.sprite.setImmovable(true)
-
     scene.add.existing(this)           // add Hero to existing scene
-    // scene.physics.add.existing(this)   // add physics body to scene
-    this.setScale(0.8)
-    // this.body.setSize(this.width / 2, this.height / 2)
-    // this.body.setImmovable(true)
+    scene.physics.add.existing(this)   // add physics body to scene
+    this.setScale(0.86)
 
-    this.health = 100
+    this.body.setSize(300, this.height)
+    this.body.setImmovable(true)
+
+    this.hp = new HealthBar(scene, HERO_HEALTH_X, HEALTH_Y)
+    this.health = 350
 
     // state machine managing hero
     scene.heroFSM = new StateMachine('idle', {
@@ -23,6 +21,17 @@ class Hero extends Phaser.Physics.Arcade.Sprite {
       hurt: new HurtState(),
     }, [scene, this])   // pass these as arguments to maintain scene/object context in the FSM
   }
+
+  updatePhysicsBody(state) {
+    switch (state) {
+      case 'idle':
+        this.body.setSize(300, this.height);  // Standard size
+        break;
+      default:
+        this.body.setSize(600, this.height); 
+        break;
+    }
+  }
 }
 
 // hero-specific state classes
@@ -30,6 +39,7 @@ class IdleState extends State {
   enter(scene, hero) {
     // reset position
     hero.x = 150
+    hero.updatePhysicsBody('idle');
 
     hero.anims.play('hero_idle')
     hero.anims.stop()
@@ -62,6 +72,8 @@ class BasicState extends State {
   }
 
   enter(scene, hero) {
+    hero.updatePhysicsBody('basic');
+
     hero.anims.play('hero_basic')
     hero.once('animationcomplete', () => {
       this.stateMachine.transition('idle')
@@ -86,6 +98,8 @@ class AbilityState extends State {
   }
 
   enter(scene, hero) {
+    hero.updatePhysicsBody('ability');
+
     hero.anims.play('hero_ability')
     hero.once('animationcomplete', () => {
       this.stateMachine.transition('idle')
@@ -110,6 +124,8 @@ class UltState extends State {
   }
 
   enter(scene, hero) {
+    hero.updatePhysicsBody('ult');
+
     hero.anims.play('hero_ult')
     hero.once('animationcomplete', () => {
       this.stateMachine.transition('idle')
@@ -132,7 +148,7 @@ class HurtState extends State {
     hero.anims.stop()
     hero.setTint(0xFF0000)     // turn red
     // create knockback by sending body in direction opposite facing direction
-    
+
     // set recovery timer
     scene.time.delayedCall(hero.hurtTimer, () => {
       hero.clearTint()

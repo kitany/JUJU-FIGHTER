@@ -47,11 +47,11 @@ class Encounter extends Phaser.Scene {
     this.bgimg.setScale(1.8)
 
     // bgm
-    this.bgm = this.sound.add('encounter_bgm', {
-      volume: 1,
-      loop: true,
-    });
-    this.bgm.play()
+    // this.bgm = this.sound.add('encounter_bgm', {
+    //   volume: 1,
+    //   loop: true,
+    // });
+    // this.bgm.play()
 
     this.hero = new Character(this, this.OFFSCREEN_X, 700, 'hero') // 150
     this.enemy = new Character(this, this.OFFSCREEN_Y, 630, 'enemy') // 650

@@ -2,42 +2,167 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y, texture, name) {
     super(scene, x, y, texture, name)
 
-    this.sprite = scene.physics.add.sprite(x, y, texture)
-    this.sprite.setOrigin(0.5, 0.5)
-    this.sprite.setImmovable(true)
-    this.name = name
-    this.health = 100
+    scene.add.existing(this)           // add Enemy to existing scene
+    scene.physics.add.existing(this)   // add physics body to scene
+
+    this.body.setSize(250, this.height)
+    this.body.setImmovable(true)
+
+    this.hp = new HealthBar(scene, ENEMY_HEALTH_X, HEALTH_Y)
+    this.health = 350
+
+    // state machine managing enemy
+    scene.enemyFSM = new StateMachine('idle', {
+      idle: new IdleStateEnemy(),
+      basic: new BasicStateEnemy(), // Q
+      ability: new AbilityStateEnemy(), // W
+      ult: new UltStateEnemy(), // E
+      hurt: new HurtStateEnemy(),
+    }, [scene, this])
   }
 
-  createAttack(scene, direction) {
-    const attack = scene.physics.add.sprite(this.sprite.x + direction, this.sprite.y, 'attack')
-    attack.setOrigin(0.5, 0.5)
-    attack.setVelocityX(direction === 1 ? 200 : -200)
-
-    // Handle collision detection with the opponent
-    if (this.name === 'Player 1') {
-      scene.physics.add.collider(attack, player2.sprite, () => {
-        player2Health -= 10
-        attack.destroy()
-        updateHealth.call(scene)
-      });
-    } else {
-      scene.physics.add.collider(attack, player1.sprite, () => {
-        player1Health -= 10
-        attack.destroy()
-        updateHealth.call(scene)
-      });
+  updatePhysicsBody(state) {
+    switch (state) {
+      case 'idle':
+        this.body.setSize(300, this.height);  // Standard size
+        break;
+      default:
+        this.body.setSize(600, this.height); 
+        break;
     }
   }
 
-  update() {
-    if(keyQ.isDown && this.y >= 135) {
-      this.y -= this.moveSpeed
-    } else if(keyDOWN.isDown && this.y <= heightUI - this.width) {
-        this.y += this.moveSpeed
+  decreaseHealth(amount) {
+    this.health -= amount
+    const isDead = this.hp.decrease(amount)
+
+    if (this.health <= 0) {
+      // this.destroy()
+      console.log('ENEMY DEFEATED')
+    }
+    return isDead;
+  }
+}
+
+// enemy-specific state classes
+class IdleStateEnemy extends State {
+  enter(scene, enemy) {
+    // reset position
+    enemy.x = 650
+    enemy.updatePhysicsBody('idle');
+
+    enemy.anims.play('enemy_idle')
+    enemy.anims.stop()
+  }
+
+  execute(scene, enemy) {
+    // if(Phaser.Input.Keyboard.JustDown(keyQ)) {
+    //   this.stateMachine.transition('basic')
+    //   return
+    // }
+
+    // if(Phaser.Input.Keyboard.JustDown(keyW)) {
+    //   this.stateMachine.transition('ability')
+    //   return
+    // }
+
+    // // hurt if H key input (just for demo purposes)
+    // if(Phaser.Input.Keyboard.JustDown(keyE)) {
+    //   this.stateMachine.transition('ult')
+    //   return
+    // }
+  }
+}
+
+class BasicStateEnemy extends State {
+  constructor() {
+    super()
+    this.movementDistance = 350
+    this.movementVelocity = 10
+  }
+
+  enter(scene, enemy) {
+    enemy.updatePhysicsBody('basic');
+
+    enemy.anims.play('enemy_basic')
+    enemy.once('animationcomplete', () => {
+      this.stateMachine.transition('idle')
+    })
+    enemy.movementRemaining = this.movementDistance
+  }
+
+  execute(scene, enemy) {
+    // move the enemy forward along the x-axis
+    if (enemy.movementRemaining > 0) {
+      enemy.x += this.movementVelocity
+      enemy.movementRemaining -= 1
     }
   }
-  
-  reset() {
+}
+
+class AbilityStateEnemy extends State {
+  constructor() {
+    super()
+    this.movementDistance = 350
+    this.movementVelocity = 10
+  }
+
+  enter(scene, enemy) {
+    enemy.updatePhysicsBody('ability');
+
+    enemy.anims.play('enemy_ability')
+    enemy.once('animationcomplete', () => {
+      this.stateMachine.transition('idle')
+    })
+    enemy.movementRemaining = this.movementDistance
+  }
+
+  execute(scene, enemy) {
+    // move the enemy forward along the x-axis
+    if (enemy.movementRemaining > 0) {
+      enemy.x += this.movementVelocity
+      enemy.movementRemaining -= 1
+    }
+  }
+}
+
+class UltStateEnemy extends State {
+  constructor() {
+    super()
+    this.movementDistance = 200
+    this.movementVelocity = 25
+  }
+
+  enter(scene, enemy) {
+    enemy.updatePhysicsBody('ult');
+
+    enemy.anims.play('enemy_ult')
+    enemy.once('animationcomplete', () => {
+      this.stateMachine.transition('idle')
+    })
+    enemy.movementRemaining = this.movementDistance
+  }
+
+  execute(scene, enemy) {
+    // move the enemy forward along the x-axis
+    if (enemy.movementRemaining > 0) {
+      enemy.x += this.movementVelocity
+      enemy.movementRemaining -= 1
+    }
+  }
+}
+
+class HurtStateEnemy extends State {
+  enter(scene, enemy) {
+    enemy.anims.play('idle')
+    enemy.anims.stop()
+    enemy.setTint(0xFF0000)     // turn red
+    // create knockback by sending body in direction opposite facing direction
+
+    // set recovery timer
+    scene.time.delayedCall(enemy.hurtTimer, () => {
+      enemy.clearTint()
+      this.stateMachine.transition('idle')
+    })
   }
 }
