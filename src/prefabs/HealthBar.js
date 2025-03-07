@@ -40,10 +40,12 @@ class HealthBar {
       this.bar.fillStyle(0xffffff)
       this.bar.fillRect(this.x + 2, this.y + 2, this.HEALTH_WIDTH - 4, this.HEALTH_HEIGHT - 4)
 
-      if (this.health < 30) {
-          this.bar.fillStyle(0xff0000)
+      if (this.health < 70) {
+        this.bar.fillStyle(0xff0000) // red
+      } else if (this.health < 200) {
+        this.bar.fillStyle(0xffff00) // yellow
       } else {
-          this.bar.fillStyle(0x00ff00)
+        this.bar.fillStyle(0x00ff00) // green
       }
 
       var d = Math.floor(this.p * this.health)

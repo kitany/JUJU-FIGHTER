@@ -32,15 +32,16 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
-  decreaseHealth(amount) {
+  decreaseHealth(scene, amount) {
     this.health -= amount
     const isDead = this.hp.decrease(amount)
 
     if (this.health <= 0) {
-      // this.destroy()
       console.log('ENEMY DEFEATED')
+    } else {
+      scene.enemyFSM.transition('hurt')
     }
-    return isDead;
+    return isDead
   }
 }
 
@@ -66,7 +67,6 @@ class IdleStateEnemy extends State {
     //   return
     // }
 
-    // // hurt if H key input (just for demo purposes)
     // if(Phaser.Input.Keyboard.JustDown(keyE)) {
     //   this.stateMachine.transition('ult')
     //   return
@@ -154,7 +154,7 @@ class UltStateEnemy extends State {
 
 class HurtStateEnemy extends State {
   enter(scene, enemy) {
-    enemy.anims.play('idle')
+    enemy.anims.play('enemy_idle')
     enemy.anims.stop()
     enemy.setTint(0xFF0000)     // turn red
     // create knockback by sending body in direction opposite facing direction

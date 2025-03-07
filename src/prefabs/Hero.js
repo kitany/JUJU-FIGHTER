@@ -56,7 +56,6 @@ class IdleState extends State {
       return
     }
 
-    // hurt if H key input (just for demo purposes)
     if(Phaser.Input.Keyboard.JustDown(keyE)) {
       this.stateMachine.transition('ult')
       return

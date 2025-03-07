@@ -15,8 +15,7 @@ class Play extends Phaser.Scene {
     this.hero = new Hero(this, 150, 340, 'hero_sheet', 0)
     this.enemy = new Enemy(this, 650, 320, 'enemy_sheet', 0)
     this.physics.add.collider(this.hero, this.enemy, (hero, enemy) => {
-      enemy.decreaseHealth(10)
-      // enemy.enemyFSM.transition('hurt')
+      enemy.decreaseHealth(this, 10)
     })
 
     // keys definition
@@ -30,5 +29,4 @@ class Play extends Phaser.Scene {
     this.heroFSM.step()
     this.enemyFSM.step()
   }
-
 }
