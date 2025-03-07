@@ -11,7 +11,7 @@
     },
     {
 			"speaker" : "enemy",
-			"dialog" : "You talk arrogantly, hero! Stand your ground or prepare to be defeated!",
+			"dialog" : "You talk arrogantly, hero. Stand your ground or prepare to be defeated!",
 			"newSpeaker" : "true"
 		},
     {

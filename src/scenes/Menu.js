@@ -33,7 +33,7 @@ class Menu extends Phaser.Scene {
     this.add.bitmapText(centerX - 140, centerY - 64, 'fantasy_italic', 'JUJU', 200).setOrigin(0.5)
     this.add.bitmapText(centerX, centerY + 40, 'fantasy_italic', 'FIGHTER', 160).setOrigin(0.5)
 
-    const playText = this.add.bitmapText(centerX, centerY + 120, 'fantasy_italic', 'PRESS [SPACE] TO PLAY', 50).setOrigin(0.5)
+    this.playText = this.add.bitmapText(centerX, centerY + 120, 'fantasy_italic', 'PRESS [SPACE] TO PLAY', 50).setOrigin(0.5)
 
     this.tweens.addCounter({
       from: 0,
@@ -42,7 +42,7 @@ class Menu extends Phaser.Scene {
       yoyo: true,
       onUpdate: (tween) => {
           const v = tween.getValue();
-          playText.setFontSize(50 + v * 5);
+          this.playText.setFontSize(50 + v * 5);
       },
       repeat: -1,
     });
@@ -54,8 +54,11 @@ class Menu extends Phaser.Scene {
   update() {
     if (Phaser.Input.Keyboard.JustDown(cursors.space)) {
       this.sound.play('blip_01', {volume: 1.0})
-      this.scene.start('encounterScene')
+      this.time.delayedCall(1000, () => {
+        // this.sound.play('blip_01', {volume: 1.0})
+        this.scene.start('encounterScene')
+      });
     }
-    this.scene.start('encounterScene')
+    // this.scene.start('encounterScene')
   }
 }
