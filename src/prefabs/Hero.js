@@ -16,7 +16,7 @@ class Hero extends Phaser.Physics.Arcade.Sprite {
     scene.heroFSM = new StateMachine('idle', {
       idle: new IdleState(),
       basic: new BasicState(), // Q
-      ability: new AbilityState(), // W
+      heavy: new HeavyState(), // W
       ult: new UltState(), // E
       hurt: new HurtState(),
     }, [scene, this])   // pass these as arguments to maintain scene/object context in the FSM
@@ -52,7 +52,7 @@ class IdleState extends State {
     }
 
     if(Phaser.Input.Keyboard.JustDown(keyW)) {
-      this.stateMachine.transition('ability')
+      this.stateMachine.transition('heavy')
       return
     }
 
@@ -74,6 +74,8 @@ class BasicState extends State {
     hero.updatePhysicsBody('basic');
 
     hero.anims.play('hero_basic')
+    scene.sound.play('punch', {volume: 1.0})
+
     hero.once('animationcomplete', () => {
       this.stateMachine.transition('idle')
     })
@@ -89,7 +91,7 @@ class BasicState extends State {
   }
 }
 
-class AbilityState extends State {
+class HeavyState extends State {
   constructor() {
     super()
     this.movementDistance = 350
@@ -97,9 +99,11 @@ class AbilityState extends State {
   }
 
   enter(scene, hero) {
-    hero.updatePhysicsBody('ability');
+    hero.updatePhysicsBody('heavy');
 
-    hero.anims.play('hero_ability')
+    hero.anims.play('hero_heavy')
+    scene.sound.play('punch', {volume: 1.0})
+
     hero.once('animationcomplete', () => {
       this.stateMachine.transition('idle')
     })
@@ -126,6 +130,8 @@ class UltState extends State {
     hero.updatePhysicsBody('ult');
 
     hero.anims.play('hero_ult')
+    scene.sound.play('flame', {volume: 1.0})
+
     hero.once('animationcomplete', () => {
       this.stateMachine.transition('idle')
     })

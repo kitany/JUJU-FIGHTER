@@ -17,6 +17,9 @@ class Menu extends Phaser.Scene {
     this.load.audio('blip01', 'audio/blip01.wav')
     this.load.audio('blip02', 'audio/blip02.wav')
     this.load.audio('encounter_bgm', 'audio/encounter.wav')
+    this.load.audio('fight', 'audio/fight.mp3')
+    this.load.audio('punch', 'audio/punch.mp3')
+    this.load.audio('flame', 'audio/flame.wav')
 
     // load images
     this.load.image('dialogbox', 'img/dialogbox.png')
@@ -78,7 +81,7 @@ class Menu extends Phaser.Scene {
       frames: this.anims.generateFrameNumbers('hero_sheet', { start: 1, end: 1 }),
     })
     this.anims.create({
-      key: 'hero_ability',
+      key: 'hero_heavy',
       frameRate: 4,
       repeat: 0,
       frames: this.anims.generateFrameNumbers('hero_sheet', { start: 3, end: 3 }),
@@ -104,7 +107,7 @@ class Menu extends Phaser.Scene {
       frames: this.anims.generateFrameNumbers('enemy_sheet', { start: 1, end: 1 }),
     })
     this.anims.create({
-      key: 'enemy_ability',
+      key: 'enemy_heavy',
       frameRate: 8,
       repeat: -1,
       frames: this.anims.generateFrameNumbers('enemy_sheet', { start: 2, end: 2 }),

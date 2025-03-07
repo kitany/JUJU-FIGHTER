@@ -10,12 +10,13 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
 
     this.hp = new HealthBar(scene, ENEMY_HEALTH_X, HEALTH_Y)
     this.health = 350
+    this.isDead = false
 
     // state machine managing enemy
     scene.enemyFSM = new StateMachine('idle', {
       idle: new IdleStateEnemy(),
       basic: new BasicStateEnemy(), // Q
-      ability: new AbilityStateEnemy(), // W
+      heavy: new HeavyStateEnemy(), // W
       ult: new UltStateEnemy(), // E
       hurt: new HurtStateEnemy(),
     }, [scene, this])
@@ -35,13 +36,13 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
   decreaseHealth(scene, amount) {
     this.health -= amount
     const isDead = this.hp.decrease(amount)
-
+    // console.log(isDead)
+    
     if (this.health <= 0) {
-      console.log('ENEMY DEFEATED')
+      this.isDead = true
     } else {
       scene.enemyFSM.transition('hurt')
     }
-    return isDead
   }
 }
 
@@ -100,7 +101,7 @@ class BasicStateEnemy extends State {
   }
 }
 
-class AbilityStateEnemy extends State {
+class HeavyStateEnemy extends State {
   constructor() {
     super()
     this.movementDistance = 350
@@ -108,9 +109,9 @@ class AbilityStateEnemy extends State {
   }
 
   enter(scene, enemy) {
-    enemy.updatePhysicsBody('ability');
+    enemy.updatePhysicsBody('heavy');
 
-    enemy.anims.play('enemy_ability')
+    enemy.anims.play('enemy_heavy')
     enemy.once('animationcomplete', () => {
       this.stateMachine.transition('idle')
     })
