@@ -43,7 +43,7 @@ class Encounter extends Phaser.Scene {
 
     this.hero = new Hero(this, this.OFFSCREEN_X, 750, 'hero') // 150
     this.enemy = new Hero(this, this.OFFSCREEN_Y, 690, 'enemy') // 650
-    this.hero.sprite.setScale(1).setTint()
+    this.hero.sprite.setScale(1)
     this.enemy.sprite.setScale(1)
 
     // parse dialog from JSON file
@@ -135,15 +135,25 @@ class Encounter extends Phaser.Scene {
     } else {
       // if not, set current speaker
       this.dialogSpeaker = this.dialog[this.dialogConvo][this.dialogLine]['speaker']
+
+      // tint current speaker
+      if (this.dialogSpeaker == 'enemy') {
+        this.hero.sprite.setTint(0x808080)
+        this.enemy.sprite.clearTint()
+      } else if (this.dialogSpeaker == 'hero') {
+        this.hero.sprite.clearTint()
+        this.enemy.sprite.setTint(0x808080)
+      }
+      
       // check if there's a new speaker (for exit/enter animations)
       if(this.dialog[this.dialogConvo][this.dialogLine]['newSpeaker']) {
         // tween in new speaker's image
-        // this.tweens.add({
-        //   targets: this[this.dialogSpeaker],
-        //   x: this.DBOX_X + 50,
-        //   duration: this.tweenDuration,
-        //   ease: 'Linear'
-        // })
+        this.tweens.add({
+          targets: this[this.dialogSpeaker],
+          x: this.DBOX_X + 50,
+          duration: this.tweenDuration,
+          ease: 'Linear'
+        })
       }
 
 
