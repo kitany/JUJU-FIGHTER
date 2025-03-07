@@ -16,4 +16,4 @@ const game = new Phaser.Game(config)
 // globals
 const centerX = game.config.width / 2
 const centerY = game.config.height / 2
-let cursors
+let cursors, keyQ, keyW, keyE

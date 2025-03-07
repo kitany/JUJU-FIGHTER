@@ -46,8 +46,15 @@ class Encounter extends Phaser.Scene {
     this.bgimg = this.add.tileSprite(0,0, 800, 600, 'bgimg').setOrigin(0, 0)
     this.bgimg.setScale(1.8)
 
-    this.hero = new Hero(this, this.OFFSCREEN_X, 700, 'hero') // 150
-    this.enemy = new Hero(this, this.OFFSCREEN_Y, 630, 'enemy') // 650
+    // bgm
+    this.bgm = this.sound.add('encounter_bgm', {
+      volume: 1,
+      loop: true,
+    });
+    this.bgm.play()
+
+    this.hero = new Character(this, this.OFFSCREEN_X, 700, 'hero') // 150
+    this.enemy = new Character(this, this.OFFSCREEN_Y, 630, 'enemy') // 650
     this.hero.sprite.setScale(1)
     this.enemy.sprite.setScale(1)
 
@@ -76,12 +83,11 @@ class Encounter extends Phaser.Scene {
       ease: 'Linear'
     })
 
-    // ready the character dialog images offscreen
-    // this.homer = this.add.sprite(this.OFFSCREEN_X, this.DBOX_Y+8, 'homer').setOrigin(0, 1)
-    // this.minerva = this.add.sprite(this.OFFSCREEN_X, this.DBOX_Y+8, 'minerva').setOrigin(0, 1)
-   
-    // input
+    // keys definition
     cursors = this.input.keyboard.createCursorKeys()
+    keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q)
+    keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W)
+    keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E)
 
     // start first dialog conversation
     this.typeText()        
@@ -90,11 +96,14 @@ class Encounter extends Phaser.Scene {
   update() {
     if(Phaser.Input.Keyboard.JustDown(cursors.space) && !this.dialogTyping) {
       this.typeText() // trigger dialog
-      this.sound.play('blip_02', {volume: 1.0})
+      this.sound.play('blip02', {volume: 1.0})
     }
 
     if(Phaser.Input.Keyboard.JustDown(cursors.space) && this.dialogDone) {
-      this.sound.play('blip_02', {volume: 1.0})
+      this.hero.destroy()
+      this.enemy.destroy()
+      this.bgm.stop()
+      this.sound.play('blip02', {volume: 1.0})
       this.scene.start('playScene')
     }
   }

@@ -10,17 +10,28 @@ class Menu extends Phaser.Scene {
     // load assets
     this.load.path = "./assets/"
 
-    // load JSON (ie dialog text)
+    // load JSON
     this.load.json('dialog', 'json/dialog.json')
 
     // load audio
-    this.load.audio('blip_01', 'audio/blip_01.wav')
-    this.load.audio('blip_02', 'audio/blip_02.wav')
+    this.load.audio('blip01', 'audio/blip01.wav')
+    this.load.audio('blip02', 'audio/blip02.wav')
+    this.load.audio('encounter_bgm', 'audio/encounter.wav')
 
     // load images
     this.load.image('dialogbox', 'img/dialogbox.png')
-    this.load.image('hero', 'img/kyo_kusanagi.png')
-    this.load.image('enemy', 'img/leona.png')
+    this.load.image('hero', 'img/hero/kyo_kusanagi.png')
+    this.load.spritesheet('hero_sheet', 'img/hero/kyo_sheet.png', {
+      frameWidth: 900,
+      frameHeight: 600,
+    })
+
+    this.load.image('enemy', 'img/enemy/leona.png')
+    this.load.spritesheet('enemy_sheet', 'img/enemy/leona_sheet.png', {
+      frameWidth: 675,
+      frameHeight: 600,
+    })
+
     this.load.image('bgimg', 'img/desert_background.PNG')
 
     // load bitmap font
@@ -47,18 +58,73 @@ class Menu extends Phaser.Scene {
       repeat: -1,
     });
 
-    // create input
+    // keys definition
     cursors = this.input.keyboard.createCursorKeys()
+    keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q)
+    keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W)
+    keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E)
+
+    // animations: hero
+    this.anims.create({
+      key: 'hero_idle',
+      frameRate: 4,
+      repeat: -1,
+      frames: this.anims.generateFrameNumbers('hero_sheet', { start: 0, end: 0 }),
+    })
+    this.anims.create({
+      key: 'hero_basic',
+      frameRate: 4,
+      repeat: 0,
+      frames: this.anims.generateFrameNumbers('hero_sheet', { start: 1, end: 1 }),
+    })
+    this.anims.create({
+      key: 'hero_ability',
+      frameRate: 4,
+      repeat: 0,
+      frames: this.anims.generateFrameNumbers('hero_sheet', { start: 3, end: 3 }),
+    })
+    this.anims.create({
+      key: 'hero_ult',
+      frameRate: 4,
+      repeat: 0,
+      frames: this.anims.generateFrameNumbers('hero_sheet', { start: 2, end: 2 }),
+    })
+
+    // animations: enemy
+    this.anims.create({
+      key: 'enemy_idle',
+      frameRate: 8,
+      repeat: -1,
+      frames: this.anims.generateFrameNumbers('enemy_sheet', { start: 0, end: 0 }),
+    })
+    this.anims.create({
+      key: 'enemy_basic',
+      frameRate: 8,
+      repeat: -1,
+      frames: this.anims.generateFrameNumbers('enemy_sheet', { start: 1, end: 1 }),
+    })
+    this.anims.create({
+      key: 'enemy_ability',
+      frameRate: 8,
+      repeat: -1,
+      frames: this.anims.generateFrameNumbers('enemy_sheet', { start: 2, end: 2 }),
+    })
+    this.anims.create({
+      key: 'enemy_ult',
+      frameRate: 8,
+      repeat: -1,
+      frames: this.anims.generateFrameNumbers('enemy_sheet', { start: 3, end: 3 }),
+    })
   }
 
   update() {
+    this.scene.start('playScene')
     if (Phaser.Input.Keyboard.JustDown(cursors.space)) {
-      this.sound.play('blip_01', {volume: 1.0})
+      this.sound.play('blip01', {volume: 1.0})
       this.time.delayedCall(1000, () => {
         // this.sound.play('blip_01', {volume: 1.0})
         this.scene.start('encounterScene')
       });
     }
-    // this.scene.start('encounterScene')
   }
 }

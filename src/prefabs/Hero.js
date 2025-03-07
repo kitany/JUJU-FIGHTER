@@ -1,38 +1,142 @@
 class Hero extends Phaser.Physics.Arcade.Sprite {
-  constructor(scene, x, y, texture, name) {
-    super(scene, x, y, texture, name)
+  constructor(scene, x, y, texture, frame) {
+    super(scene, x, y, texture, frame)
 
-    this.sprite = scene.physics.add.sprite(x, y, texture)
-    this.sprite.setOrigin(0.5, 0.5)
-    this.sprite.setImmovable(true)
-    this.name = name
+    // this.sprite = scene.physics.add.sprite(x, y, texture)
+    // this.sprite.setOrigin(0.5, 0.5)
+    // this.sprite.setImmovable(true)
+
+    scene.add.existing(this)           // add Hero to existing scene
+    // scene.physics.add.existing(this)   // add physics body to scene
+    this.setScale(0.8)
+    // this.body.setSize(this.width / 2, this.height / 2)
+    // this.body.setImmovable(true)
+
     this.health = 100
+
+    // state machine managing hero
+    scene.heroFSM = new StateMachine('idle', {
+      idle: new IdleState(),
+      basic: new BasicState(), // Q
+      ability: new AbilityState(), // W
+      ult: new UltState(), // E
+      hurt: new HurtState(),
+    }, [scene, this])   // pass these as arguments to maintain scene/object context in the FSM
+  }
+}
+
+// hero-specific state classes
+class IdleState extends State {
+  enter(scene, hero) {
+    // reset position
+    hero.x = 150
+
+    hero.anims.play('hero_idle')
+    hero.anims.stop()
   }
 
-  createAttack(scene, direction) {
-    const attack = scene.physics.add.sprite(this.sprite.x + direction, this.sprite.y, 'attack');
-    attack.setOrigin(0.5, 0.5);
-    attack.setVelocityX(direction === 1 ? 200 : -200);
+  execute(scene, hero) {
+    if(Phaser.Input.Keyboard.JustDown(keyQ)) {
+      this.stateMachine.transition('basic')
+      return
+    }
 
-    // Handle collision detection with the opponent
-    if (this.name === 'Player 1') {
-      scene.physics.add.collider(attack, player2.sprite, () => {
-        player2Health -= 10;
-        attack.destroy();
-        updateHealth.call(scene);
-      });
-    } else {
-      scene.physics.add.collider(attack, player1.sprite, () => {
-        player1Health -= 10;
-        attack.destroy();
-        updateHealth.call(scene);
-      });
+    if(Phaser.Input.Keyboard.JustDown(keyW)) {
+      this.stateMachine.transition('ability')
+      return
+    }
+
+    // hurt if H key input (just for demo purposes)
+    if(Phaser.Input.Keyboard.JustDown(keyE)) {
+      this.stateMachine.transition('ult')
+      return
     }
   }
+}
 
-  update() {
+class BasicState extends State {
+  constructor() {
+    super()
+    this.movementDistance = 350
+    this.movementVelocity = 10
   }
-  
-  reset() {
+
+  enter(scene, hero) {
+    hero.anims.play('hero_basic')
+    hero.once('animationcomplete', () => {
+      this.stateMachine.transition('idle')
+    })
+    hero.movementRemaining = this.movementDistance
+  }
+
+  execute(scene, hero) {
+    // move the hero forward along the x-axis
+    if (hero.movementRemaining > 0) {
+      hero.x += this.movementVelocity
+      hero.movementRemaining -= 1
+    }
+  }
+}
+
+class AbilityState extends State {
+  constructor() {
+    super()
+    this.movementDistance = 350
+    this.movementVelocity = 10
+  }
+
+  enter(scene, hero) {
+    hero.anims.play('hero_ability')
+    hero.once('animationcomplete', () => {
+      this.stateMachine.transition('idle')
+    })
+    hero.movementRemaining = this.movementDistance
+  }
+
+  execute(scene, hero) {
+    // move the hero forward along the x-axis
+    if (hero.movementRemaining > 0) {
+      hero.x += this.movementVelocity
+      hero.movementRemaining -= 1
+    }
+  }
+}
+
+class UltState extends State {
+  constructor() {
+    super()
+    this.movementDistance = 200
+    this.movementVelocity = 25
+  }
+
+  enter(scene, hero) {
+    hero.anims.play('hero_ult')
+    hero.once('animationcomplete', () => {
+      this.stateMachine.transition('idle')
+    })
+    hero.movementRemaining = this.movementDistance
+  }
+
+  execute(scene, hero) {
+    // move the hero forward along the x-axis
+    if (hero.movementRemaining > 0) {
+      hero.x += this.movementVelocity
+      hero.movementRemaining -= 1
+    }
+  }
+}
+
+class HurtState extends State {
+  enter(scene, hero) {
+    hero.anims.play('idle')
+    hero.anims.stop()
+    hero.setTint(0xFF0000)     // turn red
+    // create knockback by sending body in direction opposite facing direction
+    
+    // set recovery timer
+    scene.time.delayedCall(hero.hurtTimer, () => {
+      hero.clearTint()
+      this.stateMachine.transition('idle')
+    })
   }
 }
