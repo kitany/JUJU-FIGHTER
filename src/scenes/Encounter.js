@@ -41,8 +41,8 @@ class Encounter extends Phaser.Scene {
     this.bgimg = this.add.tileSprite(0,0, 800, 600, 'bgimg').setOrigin(0, 0)
     this.bgimg.setScale(1.8)
 
-    this.hero = new Hero(this, this.OFFSCREEN_X, 750, 'hero') // 150
-    this.enemy = new Hero(this, this.OFFSCREEN_Y, 690, 'enemy') // 650
+    this.hero = new Hero(this, this.OFFSCREEN_X, 700, 'hero') // 150
+    this.enemy = new Hero(this, this.OFFSCREEN_Y, 630, 'enemy') // 650
     this.hero.sprite.setScale(1)
     this.enemy.sprite.setScale(1)
 
@@ -111,30 +111,17 @@ class Encounter extends Phaser.Scene {
     
     // make sure we haven't run out of conversations...
     if(this.dialogConvo >= this.dialog.length) {
-      // here I'm exiting the final conversation to return to the title...
-      // ...but you could add alternate logic if needed
-      
-      //console.log('End of Conversations')
-      this.dialogDone = true
-
-      // tween out prior speaker's image
-      if(this.dialogLastSpeaker) {
-        this.tweens.add({
-          targets: this[this.dialogLastSpeaker],
-          x: this.OFFSCREEN_X,
-          duration: this.tweenDuration,
-          ease: 'Linear',
-          onComplete: () => {
-              this.scene.start('playScene')
-          }
-        })
-      }
       // make text box invisible
       this.dialogbox.visible = false
+
+      // end conversation, start new scene
+      this.dialogDone = true
+      this.scene.start('playScene')
 
     } else {
       // if not, set current speaker
       this.dialogSpeaker = this.dialog[this.dialogConvo][this.dialogLine]['speaker']
+      let dialogSprite = this.dialogSpeaker == 'hero' ? this.hero.sprite : this.enemy.sprite
 
       // tint current speaker
       if (this.dialogSpeaker == 'enemy') {
@@ -148,12 +135,16 @@ class Encounter extends Phaser.Scene {
       // check if there's a new speaker (for exit/enter animations)
       if(this.dialog[this.dialogConvo][this.dialogLine]['newSpeaker']) {
         // tween in new speaker's image
-        this.tweens.add({
-          targets: this[this.dialogSpeaker],
-          x: this.DBOX_X + 50,
-          duration: this.tweenDuration,
-          ease: 'Linear'
-        })
+        this.tweens.addCounter({
+          from: 0.9,
+          to: 0.95,
+          duration: 150,
+          yoyo: true,
+          onUpdate: (tween) => {
+            const v = tween.getValue();
+            dialogSprite.setScale(v + .1);
+          },
+        });
       }
 
 
