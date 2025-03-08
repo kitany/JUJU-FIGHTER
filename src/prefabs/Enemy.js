@@ -8,7 +8,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
     this.body.setSize(250, this.height)
     this.body.setImmovable(true)
 
-    this.hp = new HealthBar(scene, ENEMY_HEALTH_X, HEALTH_Y)
+    this.hp = new HealthBar(scene, ENEMY_HEALTH_X, HEALTH_Y, 'enemy')
     this.health = 350
     this.isDead = false
     this.isAttacking = false
@@ -187,7 +187,7 @@ class HurtStateEnemy extends State {
   enter(scene, enemy) {
     enemy.anims.play('enemy_idle')
     enemy.anims.stop()
-    enemy.setTint(0xFF0000)     // turn red
+    enemy.setTint(0xff0000)     // turn red
     // create knockback by sending body in direction opposite facing direction
 
     // set recovery timer

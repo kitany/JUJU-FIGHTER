@@ -26,7 +26,10 @@ class Play extends Phaser.Scene {
       }
     })
 
-    this.playAgain = this.add.bitmapText(centerX, centerY + 80, 'fantasy_italic', '[SPACE] TO PLAY AGAIN', 50).setOrigin(0.5)
+    // text objects
+    this.vs = this.add.bitmapText(centerX, 54, 'fantasy_white_200', 'VS', 100).setOrigin(0.5).setTint(0xdf7dff)
+    this.vs.setDepth(4)
+    this.playAgain = this.add.bitmapText(centerX, centerY + 80, 'fantasy_white', '[SPACE] TO PLAY AGAIN', 50).setOrigin(0.5)
       this.tweens.addCounter({
         from: 0,
         to: 1,
@@ -76,9 +79,9 @@ class Play extends Phaser.Scene {
       this.input.keyboard.removeKey(Phaser.Input.Keyboard.KeyCodes.E)
 
       if (this.win) {
-      this.add.bitmapText(centerX, centerY, 'fantasy_italic', 'WIN', 200).setOrigin(0.5)
+      this.add.bitmapText(centerX, centerY, 'fantasy_WIN', 'WIN', 200).setOrigin(0.5)
       } else {
-        this.add.bitmapText(centerX - 25, centerY, 'fantasy_italic', 'DEFEAT', 200).setOrigin(0.5).setTint(0xFF0000)
+        this.add.bitmapText(centerX - 25, centerY, 'fantasy_WIN', 'DEFEAT', 200).setOrigin(0.5).setTint(0xFF0000)
       }
       this.playAgain.visible = true
       this.physics.pause()

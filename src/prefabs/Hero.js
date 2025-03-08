@@ -9,7 +9,7 @@ class Hero extends Phaser.Physics.Arcade.Sprite {
     this.body.setSize(300, this.height)
     this.body.setImmovable(true)
 
-    this.hp = new HealthBar(scene, HERO_HEALTH_X, HEALTH_Y)
+    this.hp = new HealthBar(scene, HERO_HEALTH_X, HEALTH_Y, 'hero')
     this.health = 350
     this.isDead = false
     this.isAttacking = false
@@ -173,7 +173,7 @@ class HurtState extends State {
   enter(scene, hero) {
     hero.anims.play('hero_idle')
     hero.anims.stop()
-    hero.setTint(0xFF0000)     // turn red
+    hero.setTint(0xff0000)     // turn red
     // create knockback by sending body in direction opposite facing direction
 
     // set recovery timer

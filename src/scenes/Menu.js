@@ -38,16 +38,18 @@ class Menu extends Phaser.Scene {
     this.load.image('bgimg', 'img/desert_background.PNG')
 
     // load bitmap font
-    this.load.bitmapFont('fantasy_italic', 'fonts/fantasy_battles_italic.png', 'fonts/fantasy_battles_italic.xml')
+    this.load.bitmapFont('fantasy_white', 'fonts/fantasy_white.png', 'fonts/fantasy_white.xml')
     this.load.bitmapFont('fantasy_black', 'fonts/fantasy_battles_black.png', 'fonts/fantasy_battles_black.xml')
+    this.load.bitmapFont('fantasy_white_200', 'fonts/fantasy_white_200.png', 'fonts/fantasy_white_200.xml')
+    this.load.bitmapFont('fantasy_WIN', 'fonts/fantasy_WIN.png', 'fonts/fantasy_WIN.xml')
     this.load.bitmapFont('altone_bold', 'fonts/altone_bold.png', 'fonts/altone_bold.xml')
   }
 
   create() {
-    this.add.bitmapText(centerX - 140, centerY - 64, 'fantasy_italic', 'JUJU', 200).setOrigin(0.5)
-    this.add.bitmapText(centerX, centerY + 40, 'fantasy_italic', 'FIGHTER', 160).setOrigin(0.5)
+    this.add.bitmapText(centerX - 140, centerY - 64, 'fantasy_white_200', 'JUJU', 200).setOrigin(0.5)
+    this.add.bitmapText(centerX, centerY + 40, 'fantasy_white_200', 'FIGHTER', 160).setOrigin(0.5)
 
-    this.playText = this.add.bitmapText(centerX, centerY + 120, 'fantasy_italic', 'PRESS [SPACE] TO PLAY', 50).setOrigin(0.5)
+    this.playText = this.add.bitmapText(centerX, centerY + 120, 'fantasy_white', 'PRESS [SPACE] TO PLAY', 50).setOrigin(0.5)
 
     this.tweens.addCounter({
       from: 0,
