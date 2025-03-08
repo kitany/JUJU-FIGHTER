@@ -11,6 +11,8 @@ class Hero extends Phaser.Physics.Arcade.Sprite {
 
     this.hp = new HealthBar(scene, HERO_HEALTH_X, HEALTH_Y)
     this.health = 350
+    this.isDead = false
+    this.isAttacking = false
 
     // state machine managing hero
     scene.heroFSM = new StateMachine('idle', {
@@ -32,6 +34,17 @@ class Hero extends Phaser.Physics.Arcade.Sprite {
         break;
     }
   }
+
+  decreaseHealth(scene, amount) {
+    this.health -= amount
+    const isDead = this.hp.decrease(amount)
+    
+    if (this.health <= 0) {
+      this.isDead = true
+    } else {
+      scene.heroFSM.transition('hurt')
+    }
+  }
 }
 
 // hero-specific state classes
@@ -39,7 +52,7 @@ class IdleState extends State {
   enter(scene, hero) {
     // reset position
     hero.x = 150
-    hero.updatePhysicsBody('idle');
+    hero.updatePhysicsBody('idle')
 
     hero.anims.play('hero_idle')
     hero.anims.stop()
@@ -76,7 +89,10 @@ class BasicState extends State {
     hero.anims.play('hero_basic')
     scene.sound.play('punch', {volume: 1.0})
 
+    hero.isAttacking = true
+
     hero.once('animationcomplete', () => {
+      hero.isAttacking = false
       this.stateMachine.transition('idle')
     })
     hero.movementRemaining = this.movementDistance
@@ -104,7 +120,10 @@ class HeavyState extends State {
     hero.anims.play('hero_heavy')
     scene.sound.play('punch', {volume: 1.0})
 
+    hero.isAttacking = true
+
     hero.once('animationcomplete', () => {
+      hero.isAttacking = false
       this.stateMachine.transition('idle')
     })
     hero.movementRemaining = this.movementDistance
@@ -132,7 +151,10 @@ class UltState extends State {
     hero.anims.play('hero_ult')
     scene.sound.play('flame', {volume: 1.0})
 
+    hero.isAttacking = true
+
     hero.once('animationcomplete', () => {
+      hero.isAttacking = false
       this.stateMachine.transition('idle')
     })
     hero.movementRemaining = this.movementDistance
@@ -149,7 +171,7 @@ class UltState extends State {
 
 class HurtState extends State {
   enter(scene, hero) {
-    hero.anims.play('idle')
+    hero.anims.play('hero_idle')
     hero.anims.stop()
     hero.setTint(0xFF0000)     // turn red
     // create knockback by sending body in direction opposite facing direction

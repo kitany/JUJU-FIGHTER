@@ -11,6 +11,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
     this.hp = new HealthBar(scene, ENEMY_HEALTH_X, HEALTH_Y)
     this.health = 350
     this.isDead = false
+    this.isAttacking = false
 
     // state machine managing enemy
     scene.enemyFSM = new StateMachine('idle', {
@@ -22,21 +23,35 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
     }, [scene, this])
   }
 
+  randomAttack(scene) {
+    const attackType = Phaser.Math.Between(1, 3)
+    switch (attackType) {
+      case 1:
+        scene.enemyFSM.transition('basic')
+        break
+      case 2:
+        scene.enemyFSM.transition('heavy')
+        break
+      case 3:
+        scene.enemyFSM.transition('ult')
+        break
+    }
+  }
+
   updatePhysicsBody(state) {
     switch (state) {
       case 'idle':
-        this.body.setSize(300, this.height);  // Standard size
-        break;
+        this.body.setSize(300, this.height)  // Standard size
+        break
       default:
-        this.body.setSize(600, this.height); 
-        break;
+        this.body.setSize(700, this.height) 
+        break
     }
   }
 
   decreaseHealth(scene, amount) {
     this.health -= amount
     const isDead = this.hp.decrease(amount)
-    // console.log(isDead)
     
     if (this.health <= 0) {
       this.isDead = true
@@ -51,7 +66,7 @@ class IdleStateEnemy extends State {
   enter(scene, enemy) {
     // reset position
     enemy.x = 650
-    enemy.updatePhysicsBody('idle');
+    enemy.updatePhysicsBody('idle')
 
     enemy.anims.play('enemy_idle')
     enemy.anims.stop()
@@ -78,15 +93,20 @@ class IdleStateEnemy extends State {
 class BasicStateEnemy extends State {
   constructor() {
     super()
-    this.movementDistance = 350
-    this.movementVelocity = 10
+    this.movementDistance = 10
+    this.movementVelocity = -5
   }
 
   enter(scene, enemy) {
-    enemy.updatePhysicsBody('basic');
+    enemy.updatePhysicsBody('basic')
 
     enemy.anims.play('enemy_basic')
+    scene.sound.play('punch', {volume: 1.0})
+
+    enemy.isAttacking = true
+
     enemy.once('animationcomplete', () => {
+      enemy.isAttacking = false
       this.stateMachine.transition('idle')
     })
     enemy.movementRemaining = this.movementDistance
@@ -104,15 +124,20 @@ class BasicStateEnemy extends State {
 class HeavyStateEnemy extends State {
   constructor() {
     super()
-    this.movementDistance = 350
-    this.movementVelocity = 10
+    this.movementDistance = 10
+    this.movementVelocity = -5
   }
 
   enter(scene, enemy) {
-    enemy.updatePhysicsBody('heavy');
+    enemy.updatePhysicsBody('heavy')
 
     enemy.anims.play('enemy_heavy')
+    scene.sound.play('punch', {volume: 1.0})
+
+    enemy.isAttacking = true
+
     enemy.once('animationcomplete', () => {
+      enemy.isAttacking = false
       this.stateMachine.transition('idle')
     })
     enemy.movementRemaining = this.movementDistance
@@ -130,15 +155,20 @@ class HeavyStateEnemy extends State {
 class UltStateEnemy extends State {
   constructor() {
     super()
-    this.movementDistance = 200
-    this.movementVelocity = 25
+    this.movementDistance = 10
+    this.movementVelocity = -5
   }
 
   enter(scene, enemy) {
-    enemy.updatePhysicsBody('ult');
+    enemy.updatePhysicsBody('ult')
 
     enemy.anims.play('enemy_ult')
+    scene.sound.play('punch', {volume: 1.0})
+
+    enemy.isAttacking = true
+
     enemy.once('animationcomplete', () => {
+      enemy.isAttacking = false
       this.stateMachine.transition('idle')
     })
     enemy.movementRemaining = this.movementDistance

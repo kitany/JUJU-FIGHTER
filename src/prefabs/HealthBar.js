@@ -2,55 +2,55 @@ class HealthBar {
 
   constructor (scene, x, y)
   {
-      this.HEALTH_WIDTH = 340
-      this.HEALTH_HEIGHT = 35
+    this.HEALTH_WIDTH = 340
+    this.HEALTH_HEIGHT = 35
 
-      this.bar = new Phaser.GameObjects.Graphics(scene)
-      this.x = x
-      this.y = y
-      this.health = this.HEALTH_WIDTH - 4 // - 2 (x2) for border
-      this.p = 1 // percentage health
+    this.bar = new Phaser.GameObjects.Graphics(scene)
+    this.x = x
+    this.y = y
+    this.health = this.HEALTH_WIDTH - 4 // - 2 (x2) for border
+    this.p = 1 // percentage health
 
-      this.draw()
-      scene.add.existing(this.bar)
+    this.draw()
+    scene.add.existing(this.bar)
   }
 
   decrease (amount)
   {
-      this.health -= amount;
+    this.health -= amount;
 
-      if (this.health < 0){
-          this.health = 0
-      }
+    if (this.health < 0){
+        this.health = 0
+    }
 
-      this.draw()
+    this.draw()
 
-      return (this.health === 0)
+    return (this.health === 0)
   }
 
   draw ()
   {
-      this.bar.clear()
+    this.bar.clear()
 
-      // bg
-      this.bar.fillStyle(0x000000)
-      this.bar.fillRect(this.x, this.y, 340, this.HEALTH_HEIGHT)
+    // bg
+    this.bar.fillStyle(0x000000)
+    this.bar.fillRect(this.x, this.y, 340, this.HEALTH_HEIGHT)
 
-      // health
-      this.bar.fillStyle(0xffffff)
-      this.bar.fillRect(this.x + 2, this.y + 2, this.HEALTH_WIDTH - 4, this.HEALTH_HEIGHT - 4)
+    // health
+    this.bar.fillStyle(0xffffff)
+    this.bar.fillRect(this.x + 2, this.y + 2, this.HEALTH_WIDTH - 4, this.HEALTH_HEIGHT - 4)
 
-      if (this.health < 70) {
-        this.bar.fillStyle(0xff0000) // red
-      } else if (this.health < 200) {
-        this.bar.fillStyle(0xffff00) // yellow
-      } else {
-        this.bar.fillStyle(0x00ff00) // green
-      }
+    if (this.health < 70) {
+      this.bar.fillStyle(0xff0000) // red
+    } else if (this.health < 200) {
+      this.bar.fillStyle(0xffff00) // yellow
+    } else {
+      this.bar.fillStyle(0x00ff00) // green
+    }
 
-      var d = Math.floor(this.p * this.health)
-      this.bar.fillRect(this.x + 2, this.y + 2, d, this.HEALTH_HEIGHT - 4)
-      this.bar.setDepth(4)
+    var d = Math.floor(this.p * this.health)
+    this.bar.fillRect(this.x + 2, this.y + 2, d, this.HEALTH_HEIGHT - 4)
+    this.bar.setDepth(4)
   }
 
 }

@@ -96,26 +96,26 @@ class Menu extends Phaser.Scene {
     // animations: enemy
     this.anims.create({
       key: 'enemy_idle',
-      frameRate: 8,
+      frameRate: 4,
       repeat: -1,
       frames: this.anims.generateFrameNumbers('enemy_sheet', { start: 0, end: 0 }),
     })
     this.anims.create({
       key: 'enemy_basic',
-      frameRate: 8,
-      repeat: -1,
+      frameRate: 4,
+      repeat: 0,
       frames: this.anims.generateFrameNumbers('enemy_sheet', { start: 1, end: 1 }),
     })
     this.anims.create({
       key: 'enemy_heavy',
-      frameRate: 8,
-      repeat: -1,
+      frameRate: 4,
+      repeat: 0,
       frames: this.anims.generateFrameNumbers('enemy_sheet', { start: 2, end: 2 }),
     })
     this.anims.create({
       key: 'enemy_ult',
-      frameRate: 8,
-      repeat: -1,
+      frameRate: 4,
+      repeat: 0,
       frames: this.anims.generateFrameNumbers('enemy_sheet', { start: 3, end: 3 }),
     })
   }
