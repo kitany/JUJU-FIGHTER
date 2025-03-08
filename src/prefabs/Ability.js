@@ -38,7 +38,7 @@ class Ability {
     // Set a timer to re-enable the ability after cooldown ends
     this.scene.time.delayedCall(this.cooldownTime, () => {
       this.isOnCooldown = false
-      console.log('off cooldown')
+      // console.log('off cooldown')
     });
   }
 
@@ -46,7 +46,7 @@ class Ability {
   update() {
     // Check if the key is pressed and the ability is not on cooldown
     if (this.key.isDown && !this.isOnCooldown) {
-      console.log(`${this.keyChar} pressed`)
+      // console.log(`${this.keyChar} pressed`)
       this.activateAbility()
     }
 
