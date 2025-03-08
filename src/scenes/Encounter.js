@@ -139,7 +139,7 @@ class Encounter extends Phaser.Scene {
       this.dialogSpeaker = this.dialog[this.dialogConvo][this.dialogLine]['speaker']
       let dialogSprite = this.dialogSpeaker == 'hero' ? this.hero.sprite : this.enemy.sprite
 
-      // tint current speaker
+      // tint inactive speaker
       if (this.dialogSpeaker == 'enemy') {
         this.hero.sprite.setTint(0x808080)
         this.enemy.sprite.clearTint()

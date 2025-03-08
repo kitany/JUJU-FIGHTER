@@ -22,3 +22,9 @@ const ENEMY_HEALTH_X = centerX + 30
 const HEALTH_Y = 30
 
 let cursors, keyQ, keyW, keyE
+
+const HERO_ABILITY_CD = {
+  Q: 1000,
+  W: 2000,
+  E: 4000,
+}

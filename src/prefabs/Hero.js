@@ -34,10 +34,14 @@ class Hero extends Phaser.Physics.Arcade.Sprite {
         break;
     }
   }
+  
+  // updateCooldown(time) {
+  //   for (let(key))
+  // }
 
   decreaseHealth(scene, amount) {
-    this.health -= amount
-    const isDead = this.hp.decrease(amount)
+    // this.health -= amount
+    // const isDead = this.hp.decrease(amount)
     
     if (this.health <= 0) {
       this.isDead = true

@@ -28,7 +28,8 @@ class Play extends Phaser.Scene {
 
     // text objects
     this.vs = this.add.bitmapText(centerX, 54, 'fantasy_white_200', 'VS', 100).setOrigin(0.5).setTint(0xdf7dff)
-    this.vs.setDepth(4)
+    this.vs.setDepth(5)
+
     this.playAgain = this.add.bitmapText(centerX, centerY + 80, 'fantasy_white', '[SPACE] TO PLAY AGAIN', 50).setOrigin(0.5)
       this.tweens.addCounter({
         from: 0,
@@ -44,13 +45,18 @@ class Play extends Phaser.Scene {
     this.playAgain.visible = false
 
     // begin randomized enemy attacks 
-    this.enemyAttack()
+    // this.enemyAttack()
 
     // keys definition
     cursors = this.input.keyboard.createCursorKeys()
     keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q)
     keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W)
     keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E)
+
+    // ability cooldowns
+    this.abilityQ = new Ability(this, 30, 500, keyQ, 'Q', HERO_ABILITY_CD['Q'])
+    this.abilityW = new Ability(this, 130, 500, keyQ, 'W', HERO_ABILITY_CD['W'])
+    // this.abilityE = new Ability(this, 190, 500, keyE, 'E', HERO_ABILITY_CD['E'])
   }
 
   enemyAttack() {
@@ -67,6 +73,8 @@ class Play extends Phaser.Scene {
   update() {
     this.heroFSM.step()
     this.enemyFSM.step()
+    this.abilityQ.update()
+    this.abilityW.update()
 
     if (this.enemy.isDead || this.hero.isDead) {
       this.gameOver = true

@@ -5,6 +5,7 @@ class HealthBar {
     this.HEALTH_WIDTH = 340
     this.HEALTH_HEIGHT = 35
 
+    this.scene = scene
     this.bar = new Phaser.GameObjects.Graphics(scene)
     this.x = x
     this.y = y
@@ -13,7 +14,7 @@ class HealthBar {
     this.character = character
 
     this.draw()
-    scene.add.existing(this.bar)
+    this.scene.add.existing(this.bar)
   }
 
   decrease (amount)
