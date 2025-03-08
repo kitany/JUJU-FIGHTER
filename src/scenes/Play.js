@@ -10,6 +10,7 @@ class Play extends Phaser.Scene {
     // game over flags
     this.gameOver = false
     this.win = false
+    this.overtime = false
     
     // this.sound.stopAll()
     this.bgimg = this.add.tileSprite(0,0, 800, 600, 'bgimg').setOrigin(0, 0)
@@ -22,13 +23,13 @@ class Play extends Phaser.Scene {
       if (hero.isAttacking) {
         enemy.decreaseHealth(this, 15) // hero attacks, decrease enemy health
       } else if (enemy.isAttacking) {
-        hero.decreaseHealth(this, 15) // enemy attacks, decrease hero health
+        hero.decreaseHealth(this, 5) // enemy attacks, decrease hero health
       }
     })
 
     // text objects
-    this.vs = this.add.bitmapText(centerX, 54, 'fantasy_white_200', 'VS', 100).setOrigin(0.5).setTint(0xdf7dff)
-    this.vs.setDepth(5)
+    // this.vs = this.add.bitmapText(centerX, 54, 'fantasy_white_200', 'VS', 100).setOrigin(0.5).setTint(0xdf7dff)
+    // this.vs.setDepth(5)
 
     this.playAgain = this.add.bitmapText(centerX, centerY + 80, 'fantasy_white', '[SPACE] TO PLAY AGAIN', 50).setOrigin(0.5)
       this.tweens.addCounter({
@@ -43,6 +44,10 @@ class Play extends Phaser.Scene {
         repeat: -1,
       });
     this.playAgain.visible = false
+
+    // game timer
+    this.clock = new Clock(this, centerX, 50)
+    // this.clock.start()
 
     // begin randomized enemy attacks 
     // this.enemyAttack()
@@ -71,11 +76,21 @@ class Play extends Phaser.Scene {
   }
 
   update() {
+    // update character states
     this.heroFSM.step()
     this.enemyFSM.step()
+
+    // update ability cooldowns
     this.abilityQ.update()
     this.abilityW.update()
     this.abilityE.update()
+
+    this.clock.update()
+
+    if (this.clock.currentTime <= 0) {
+      this.gameOver = true
+      this.overtime = true
+    }
 
     if (this.enemy.isDead || this.hero.isDead) {
       this.gameOver = true
@@ -83,18 +98,23 @@ class Play extends Phaser.Scene {
     }
 
     if (this.gameOver) {
+      this.clock.stop()
+
       this.input.keyboard.removeKey(Phaser.Input.Keyboard.KeyCodes.Q)
       this.input.keyboard.removeKey(Phaser.Input.Keyboard.KeyCodes.W)
       this.input.keyboard.removeKey(Phaser.Input.Keyboard.KeyCodes.E)
 
       if (this.win) {
-      this.add.bitmapText(centerX, centerY, 'fantasy_WIN', 'WIN', 200).setOrigin(0.5)
-      } else {
+        this.add.bitmapText(centerX, centerY, 'fantasy_WIN', 'WIN', 200).setOrigin(0.5)
+      } else if (this.overtime) {
+        this.add.bitmapText(centerX, centerY, 'fantasy_WIN', 'TIE', 200).setOrigin(0.5)
+      }
+      else {
         this.add.bitmapText(centerX - 25, centerY, 'fantasy_WIN', 'DEFEAT', 200).setOrigin(0.5).setTint(0xFF0000)
       }
       this.playAgain.visible = true
       this.physics.pause()
-      this.attackTimer.remove()
+      // this.attackTimer.remove()
 
       if (Phaser.Input.Keyboard.JustDown(cursors.space)) {
         console.log('space')

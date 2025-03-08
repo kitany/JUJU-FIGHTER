@@ -2,7 +2,7 @@ class HealthBar {
 
   constructor (scene, x, y, character)
   {
-    this.HEALTH_WIDTH = 340
+    this.HEALTH_WIDTH = 290
     this.HEALTH_HEIGHT = 35
 
     this.scene = scene
@@ -36,7 +36,7 @@ class HealthBar {
 
     // bg
     this.bar.fillStyle(0x000000)
-    this.bar.fillRect(this.x, this.y, 340, this.HEALTH_HEIGHT)
+    this.bar.fillRect(this.x, this.y, this.HEALTH_WIDTH, this.HEALTH_HEIGHT)
 
     // health
     // this.bar.fillStyle(0xffffff)

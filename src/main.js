@@ -18,7 +18,7 @@ const centerX = game.config.width / 2
 const centerY = game.config.height / 2
 
 const HERO_HEALTH_X = 30
-const ENEMY_HEALTH_X = centerX + 30
+const ENEMY_HEALTH_X = centerX + 80
 const HEALTH_Y = 30
 
 let cursors, keyQ, keyW, keyE

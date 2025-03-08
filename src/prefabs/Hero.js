@@ -45,6 +45,10 @@ class Hero extends Phaser.Physics.Arcade.Sprite {
       scene.heroFSM.transition('hurt')
     }
   }
+
+  abilityOnCooldown() {
+    
+  }
 }
 
 // hero-specific state classes
