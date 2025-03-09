@@ -9,7 +9,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
     this.body.setImmovable(true)
 
     this.hp = new HealthBar(scene, ENEMY_HEALTH_X, HEALTH_Y, 'enemy')
-    this.health = 350
+    this.health = 290
     this.isDead = false
     this.isAttacking = false
 
@@ -50,8 +50,8 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
   }
 
   decreaseHealth(scene, amount) {
-    // this.health -= amount
-    // const isDead = this.hp.decrease(amount)
+    this.health -= amount
+    const isDead = this.hp.decrease(amount)
     
     if (this.health <= 0) {
       this.isDead = true
@@ -73,6 +73,7 @@ class IdleStateEnemy extends State {
   }
 
   execute(scene, enemy) {
+    // MODIFICATION FOR MULTIPLAYER
     // if(Phaser.Input.Keyboard.JustDown(keyQ)) {
     //   this.stateMachine.transition('basic')
     //   return

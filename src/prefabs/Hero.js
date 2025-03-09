@@ -10,7 +10,7 @@ class Hero extends Phaser.Physics.Arcade.Sprite {
     this.body.setImmovable(true)
 
     this.hp = new HealthBar(scene, HERO_HEALTH_X, HEALTH_Y, 'hero')
-    this.health = 350
+    this.health = 290
     this.isDead = false
     this.isAttacking = false
 
@@ -39,6 +39,7 @@ class Hero extends Phaser.Physics.Arcade.Sprite {
   }
 
   abilityOffCooldown(ability) {
+    // console.log(`${ability} off cooldown? ${this.cooldowns[ability] <= 0}`)
     return this.cooldowns[ability] <= 0
   }
 

@@ -46,8 +46,8 @@ class Menu extends Phaser.Scene {
   }
 
   create() {
-    this.add.bitmapText(centerX - 140, centerY - 64, 'fantasy_white_200', 'JUJU', 200).setOrigin(0.5)
-    this.add.bitmapText(centerX, centerY + 40, 'fantasy_white_200', 'FIGHTER', 160).setOrigin(0.5)
+    this.add.bitmapText(centerX - 140, centerY - 64, 'fantasy_WIN', 'JUJU', 200).setOrigin(0.5)
+    this.add.bitmapText(centerX, centerY + 40, 'fantasy_WIN', 'FIGHTER', 160).setOrigin(0.5)
 
     this.playText = this.add.bitmapText(centerX, centerY + 120, 'fantasy_white', 'PRESS [SPACE] TO PLAY', 50).setOrigin(0.5)
 
@@ -123,7 +123,7 @@ class Menu extends Phaser.Scene {
   }
 
   update() {
-    this.scene.start('playScene')
+    // this.scene.start('playScene')
     if (Phaser.Input.Keyboard.JustDown(cursors.space)) {
       this.sound.play('blip01', {volume: 1.0})
       this.time.delayedCall(1000, () => {

@@ -21,7 +21,7 @@ class Play extends Phaser.Scene {
     this.enemy = new Enemy(this, 650, 320, 'enemy_sheet', 0)
     this.physics.add.collider(this.hero, this.enemy, (hero, enemy) => {
       if (hero.isAttacking) {
-        enemy.decreaseHealth(this, 15) // hero attacks, decrease enemy health
+        enemy.decreaseHealth(this, 10) // hero attacks, decrease enemy health
       } else if (enemy.isAttacking) {
         hero.decreaseHealth(this, 5) // enemy attacks, decrease hero health
       }
@@ -47,10 +47,10 @@ class Play extends Phaser.Scene {
 
     // game timer
     this.clock = new Clock(this, centerX, 50)
-    // this.clock.start()
+    this.clock.start()
 
     // begin randomized enemy attacks 
-    // this.enemyAttack()
+    this.enemyAttack()
 
     // keys definition
     cursors = this.input.keyboard.createCursorKeys()
@@ -69,6 +69,7 @@ class Play extends Phaser.Scene {
       delay: Phaser.Math.Between(500, 2000),
       callback: () => {
         this.enemy.randomAttack(this)
+        this.attackTimer.delay = Phaser.Math.Between(500, 2000)
       },
       callbackScope: this,
       loop: true,
@@ -116,10 +117,9 @@ class Play extends Phaser.Scene {
       }
       this.playAgain.visible = true
       this.physics.pause()
-      // this.attackTimer.remove()
+      this.attackTimer.remove()
 
       if (Phaser.Input.Keyboard.JustDown(cursors.space)) {
-        console.log('space')
         this.sound.play('blip01', {volume: 1.0})
         this.time.delayedCall(1000, () => {
           // this.sound.play('blip_01', {volume: 1.0})
