@@ -80,6 +80,8 @@ class Play extends Phaser.Scene {
     this.heroFSM.step()
     this.enemyFSM.step()
 
+    this.hero.updateCooldowns(this.game.loop.delta)
+
     // update ability cooldowns
     this.abilityQ.update()
     this.abilityW.update()

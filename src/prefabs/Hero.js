@@ -14,6 +14,12 @@ class Hero extends Phaser.Physics.Arcade.Sprite {
     this.isDead = false
     this.isAttacking = false
 
+    this.cooldowns = {
+      basic: 0,
+      heavy: 0,
+      ult: 0,
+    }
+
     // state machine managing hero
     scene.heroFSM = new StateMachine('idle', {
       idle: new IdleState(),
@@ -22,6 +28,18 @@ class Hero extends Phaser.Physics.Arcade.Sprite {
       ult: new UltState(), // E
       hurt: new HurtState(),
     }, [scene, this])   // pass these as arguments to maintain scene/object context in the FSM
+  }
+
+  updateCooldowns(delta) {
+    for (let ability in this.cooldowns) {
+      if (this.cooldowns[ability] > 0) {
+        this.cooldowns[ability] -= delta
+      }
+    }
+  }
+
+  abilityOffCooldown(ability) {
+    return this.cooldowns[ability] <= 0
   }
 
   updatePhysicsBody(state) {
@@ -45,10 +63,6 @@ class Hero extends Phaser.Physics.Arcade.Sprite {
       scene.heroFSM.transition('hurt')
     }
   }
-
-  abilityOnCooldown() {
-    
-  }
 }
 
 // hero-specific state classes
@@ -63,17 +77,20 @@ class IdleState extends State {
   }
 
   execute(scene, hero) {
-    if(Phaser.Input.Keyboard.JustDown(keyQ)) {
+    if(Phaser.Input.Keyboard.JustDown(keyQ) && hero.abilityOffCooldown('basic')) {
+      hero.cooldowns.basic = HERO_ABILITY_CD.Q
       this.stateMachine.transition('basic')
       return
     }
 
-    if(Phaser.Input.Keyboard.JustDown(keyW)) {
+    if(Phaser.Input.Keyboard.JustDown(keyW) && hero.abilityOffCooldown('heavy')) {
+      hero.cooldowns.heavy = HERO_ABILITY_CD.W
       this.stateMachine.transition('heavy')
       return
     }
 
-    if(Phaser.Input.Keyboard.JustDown(keyE)) {
+    if(Phaser.Input.Keyboard.JustDown(keyE) && hero.abilityOffCooldown('ult')) {
+      hero.cooldowns.ult = HERO_ABILITY_CD.E
       this.stateMachine.transition('ult')
       return
     }
