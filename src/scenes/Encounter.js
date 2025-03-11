@@ -88,6 +88,7 @@ class Encounter extends Phaser.Scene {
     keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q)
     keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W)
     keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E)
+    keySKIP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER)
 
     // start first dialog conversation
     this.typeText()        
@@ -102,7 +103,11 @@ class Encounter extends Phaser.Scene {
     if(Phaser.Input.Keyboard.JustDown(cursors.space) && this.dialogDone) {
       this.hero.destroy()
       this.enemy.destroy()
-      this.bgm.stop()
+      this.sound.play('blip02', {volume: 1.0})
+      this.scene.start('playScene')
+    }
+
+    if(Phaser.Input.Keyboard.JustDown(keySKIP)) {
       this.sound.play('blip02', {volume: 1.0})
       this.scene.start('playScene')
     }
