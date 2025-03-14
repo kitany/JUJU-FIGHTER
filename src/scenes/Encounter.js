@@ -10,7 +10,7 @@ class Encounter extends Phaser.Scene {
     this.DBOX_FONT = 'altone_bold'	    // dialog box font key
 
     this.TEXT_X = 50			    // text w/in dialog box x-position
-    this.TEXT_Y = 470 		    // text w/in dialog box y-position
+    this.TEXT_Y = 460 		    // text w/in dialog box y-position
     this.TEXT_SIZE = 28		        // text font size (in pixels)
     this.TEXT_MAX_WIDTH = 715	    // max width of text within box
 
@@ -21,7 +21,12 @@ class Encounter extends Phaser.Scene {
 
     this.NEXT_TEXT = '[SPACE]'	    // text to display for next prompt
     this.NEXT_X = centerX		    // next text prompt x-position
-    this.NEXT_Y = 574			    // next text prompt y-position
+    this.NEXT_Y = 550		    // next text prompt y-position
+
+    this.SKIP_TEXT = '[ENTER to SKIP]'
+    this.SKIP_X = centerX
+    this.SKIP_Y = 580
+    this.SKIP_SIZE = 20
 
     this.LETTER_TIMER = 10		    // # ms each letter takes to "type" onscreen
 
@@ -33,6 +38,7 @@ class Encounter extends Phaser.Scene {
     this.dialogTyping = false		// flag to lock player input while text is "typing"
     this.dialogText = null			// the actual dialog text
     this.nextText = null			// player prompt text to continue typing
+    this.skipText = null
     this.dialogDone = false
 
     // character variables
@@ -68,6 +74,7 @@ class Encounter extends Phaser.Scene {
     this.dialogText = this.add.bitmapText(this.TEXT_X, this.TEXT_Y, this.DBOX_FONT, '', this.TEXT_SIZE)
     this.nextText = this.add.bitmapText(this.NEXT_X, this.NEXT_Y, this.DBOX_FONT, '', this.TEXT_SIZE).setOrigin(0.5, 0)
     this.speakerName = this.add.bitmapText(this.SPEAKER_X, this.SPEAKER_Y, this.SPEAKER_FONT, '', this.SPEAKER_SIZE).setOrigin(0.5, 0)
+    this.skipText = this.add.bitmapText(this.SKIP_X, this.SKIP_Y, this.DBOX_FONT, '', this.SKIP_SIZE).setOrigin(0.5, 0)
 
     this.tweens.add({
       targets: this.hero.sprite,
@@ -191,6 +198,7 @@ class Encounter extends Phaser.Scene {
           if(this.textTimer.getRepeatCount() == 0) {
             // show prompt for more text
             this.nextText = this.add.bitmapText(this.NEXT_X, this.NEXT_Y, this.DBOX_FONT, this.NEXT_TEXT, this.TEXT_SIZE).setOrigin(0.5, 1)
+            this.skipText = this.add.bitmapText(this.SKIP_X, this.SKIP_Y, this.DBOX_FONT, this.SKIP_TEXT, this.SKIP_SIZE).setOrigin(0.5, 1)
             this.dialogTyping = false   // un-lock input
             this.textTimer.destroy()    // destroy timer
           }
