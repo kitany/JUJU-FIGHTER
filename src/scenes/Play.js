@@ -59,9 +59,9 @@ class Play extends Phaser.Scene {
     keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E)
 
     // ability cooldowns
-    this.abilityQ = new Ability(this, 30, 500, keyQ, 'Q', HERO_ABILITY_CD.Q)
-    this.abilityW = new Ability(this, 130, 500, keyW, 'W', HERO_ABILITY_CD.W)
-    this.abilityE = new Ability(this, 230, 500, keyE, 'E', HERO_ABILITY_CD['E'])
+    this.abilityQ = new Ability(this, 30, 440, keyQ, 'Q', HERO_ABILITY_CD.Q, 'basic')
+    this.abilityW = new Ability(this, 160, 440, keyW, 'W', HERO_ABILITY_CD.W, 'heavy')
+    this.abilityE = new Ultimate(this, 300, 440, keyE, 'E', HERO_ABILITY_CD.E, 'ult')
   }
 
   enemyAttack() {

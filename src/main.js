@@ -27,5 +27,5 @@ let restart = false
 const HERO_ABILITY_CD = {
   Q: 1000,
   W: 2000,
-  E: 4000,
+  E: 5000,
 }

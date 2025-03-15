@@ -17,7 +17,7 @@ class Hero extends Phaser.Physics.Arcade.Sprite {
     this.cooldowns = {
       basic: 0,
       heavy: 0,
-      ult: 0,
+      ult: 5000,
     }
 
     // state machine managing hero

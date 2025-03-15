@@ -1,11 +1,7 @@
-class Ultimate {
-  constructor(scene, x, y, key, keyChar, cooldown) {
-    this.scene = scene
-    this.x = x
-    this.y = y
-    this.key = key
-    this.keyChar = keyChar
-    this.cooldownTime = cooldown // in ms
+class Ultimate extends Ability {
+  constructor(scene, x, y, key, keyChar, cooldown, img) {
+    super(scene, x, y, key, keyChar, cooldown, img)
+
     this.lastUsedTime = 0
     this.isOnCooldown = false
     this.INACTIVE = 0xb0b0b0 // grey color
@@ -13,16 +9,19 @@ class Ultimate {
     this.ALPHA = 0.8
 
     // Cooldown bar initial dimensions
-    this.CD_WIDTH = 80 // Full width of the cooldown bar
-    this.CD_HEIGHT = 70 // Height of the cooldown bar
+    this.CD_WIDTH = 120  // Full width of the cooldown bar
+    this.CD_HEIGHT = 160 // Height of the cooldown bar
+    
+    this.x -= 10
+    this.y -= 30
 
-    // Create a visual representation of the ability (optional)
-    this.text = this.scene.add.bitmapText(this.x + this.CD_WIDTH / 2 - 7, this.y + this.CD_HEIGHT / 2 + 2, 'fantasy_white', this.keyChar, 60).setOrigin(0.5)
-    this.text.setDepth(5)
+    this.icon.setScale(1.2)
+    this.icon.y -= 15
 
     // Create a graphics object to draw the cooldown bar
     this.cooldownBar = this.scene.add.graphics()
     this.cooldownBar.fillStyle(this.INACTIVE, this.ALPHA).setDepth(5) // grey
+    this.gameStart = true
   }
 
   // Method to handle the ability activation
@@ -44,6 +43,10 @@ class Ultimate {
 
   // Update method to check the key input and cooldown status
   update() {
+    if (this.gameStart) {
+      this.activateAbility()
+      this.gameStart = false
+    }
     // Check if the key is pressed and the ability is not on cooldown
     if (this.key.isDown && !this.isOnCooldown) {
       // console.log(`${this.keyChar} pressed`)

@@ -36,6 +36,9 @@ class Menu extends Phaser.Scene {
     })
 
     this.load.image('bgimg', 'img/desert_background.PNG')
+    this.load.image('basic', 'img/abilities/basic.PNG')
+    this.load.image('heavy', 'img/abilities/heavy.PNG')
+    this.load.image('ult', 'img/abilities/ult.PNG')
 
     // load bitmap font
     this.load.bitmapFont('fantasy_white', 'fonts/fantasy_white.png', 'fonts/fantasy_white.xml')
@@ -128,7 +131,7 @@ class Menu extends Phaser.Scene {
   }
 
   update() {
-    // this.scene.start('creditsScene')
+    this.scene.start('playScene')
     if (Phaser.Input.Keyboard.JustDown(cursors.space)) {
       this.sound.play('blip01', {volume: 1.0})
       this.time.delayedCall(500, () => {

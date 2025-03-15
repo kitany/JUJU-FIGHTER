@@ -1,11 +1,12 @@
 class Ability {
-  constructor(scene, x, y, key, keyChar, cooldown) {
+  constructor(scene, x, y, key, keyChar, cooldown, img) {
     this.scene = scene
     this.x = x
     this.y = y
     this.key = key
     this.keyChar = keyChar
     this.cooldownTime = cooldown // in ms
+    this.img = img
     this.lastUsedTime = 0
     this.isOnCooldown = false
     this.INACTIVE = 0xb0b0b0 // grey color
@@ -13,12 +14,15 @@ class Ability {
     this.ALPHA = 0.8
 
     // Cooldown bar initial dimensions
-    this.CD_WIDTH = 80 // Full width of the cooldown bar
-    this.CD_HEIGHT = 70 // Height of the cooldown bar
+    this.CD_WIDTH = 110 // Full width of the cooldown bar
+    this.CD_HEIGHT = 130 // Height of the cooldown bar
 
-    // Create a visual representation of the ability (optional)
-    this.text = this.scene.add.bitmapText(this.x + this.CD_WIDTH / 2 - 7, this.y + this.CD_HEIGHT / 2 + 2, 'fantasy_white', this.keyChar, 60).setOrigin(0.5)
+    // Create a visual representation of the ability (text)
+    this.text = this.scene.add.bitmapText(this.x + this.CD_WIDTH / 2 - 5, this.y + this.CD_HEIGHT - 20, 'fantasy_white', this.keyChar, 50).setOrigin(0.5)
     this.text.setDepth(5)
+
+    this.icon = this.scene.add.sprite(this.x + this.CD_WIDTH / 2, this.y + this.CD_HEIGHT / 2 - 18, this.img).setOrigin(0.5)
+    this.icon.setDepth(5)
 
     // Create a graphics object to draw the cooldown bar
     this.cooldownBar = this.scene.add.graphics()
