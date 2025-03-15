@@ -66,10 +66,10 @@ class Play extends Phaser.Scene {
 
   enemyAttack() {
     this.attackTimer = this.time.addEvent({
-      delay: Phaser.Math.Between(500, 2000),
+      delay: Phaser.Math.Between(500, 4000),
       callback: () => {
         this.enemy.randomAttack(this)
-        this.attackTimer.delay = Phaser.Math.Between(500, 2000)
+        this.attackTimer.delay = Phaser.Math.Between(500, 4000)
       },
       callbackScope: this,
       loop: true,

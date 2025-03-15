@@ -9,6 +9,18 @@
  * BGM:
  *  encounter - freesound.org/people/joshuaempyre/sounds/251461/
  * 
+ * ----- MAJOR COMPONENTS ------------------------------------------------
+ * 1. Physics system: JuJu Fighter uses a physics collision system to inflict
+ * damage on the player or the enemy.
+ * 2. Text objects: Text objects used in title screens and play scenes such as
+ * text signal that "Ability is on cooldown" used to inform player about how to play the game.
+ * 3. Timers: Game clock is used to count down fight in case player does not defeat enemy in time.
+ * Timers are also used to track ability cooldowns and enemy attack frequency.
+ * 4. Animation manager: Animations used in state manager when enemy/player attacks. Animation
+ * changes based on the object's state.
+ * 5. Tween manager: Tweens used to animate Encounter scene where player reads dialogue
+ * between Enemy and Hero. Tweens also used for text objects to make game feel more animated.
+ * 
  */
 
 let config = {
