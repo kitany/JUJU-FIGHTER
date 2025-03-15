@@ -7,7 +7,7 @@ class Encounter extends Phaser.Scene {
     // dialog constants
     this.DBOX_X = 25		        // dialog box x-position
     this.DBOX_Y = 400			    // dialog box y-position
-    this.DBOX_FONT = 'altone_bold'	    // dialog box font key
+    this.DBOX_FONT = 'chocolates_black'	    // dialog box font key
 
     this.TEXT_X = 50			    // text w/in dialog box x-position
     this.TEXT_Y = 460 		    // text w/in dialog box y-position

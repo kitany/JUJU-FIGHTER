@@ -8,7 +8,7 @@ let config = {
       debug: false
     },
   },
-  scene: [ Menu, Encounter, Play ],
+  scene: [ Menu, Encounter, Play, Credits],
 }
 
 const game = new Phaser.Game(config)
@@ -21,7 +21,8 @@ const HERO_HEALTH_X = 30
 const ENEMY_HEALTH_X = centerX + 80
 const HEALTH_Y = 30
 
-let cursors, keyQ, keyW, keyE, keySKIP
+let cursors, keyQ, keyW, keyE, keySKIP, keyCREDITS
+let restart = false
 
 const HERO_ABILITY_CD = {
   Q: 1000,

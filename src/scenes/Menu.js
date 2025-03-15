@@ -42,7 +42,8 @@ class Menu extends Phaser.Scene {
     this.load.bitmapFont('fantasy_black', 'fonts/fantasy_battles_black.png', 'fonts/fantasy_battles_black.xml')
     this.load.bitmapFont('fantasy_white_200', 'fonts/fantasy_white_200.png', 'fonts/fantasy_white_200.xml')
     this.load.bitmapFont('fantasy_WIN', 'fonts/fantasy_WIN.png', 'fonts/fantasy_WIN.xml')
-    this.load.bitmapFont('altone_bold', 'fonts/altone_bold.png', 'fonts/altone_bold.xml')
+    this.load.bitmapFont('chocolates_black', 'fonts/chocolates_black.png', 'fonts/chocolates_black.xml')
+    this.load.bitmapFont('chocolates_white', 'fonts/chocolates_white.png', 'fonts/chocolates_white.xml')
   }
 
   create() {
@@ -50,6 +51,7 @@ class Menu extends Phaser.Scene {
     this.add.bitmapText(centerX, centerY + 40, 'fantasy_WIN', 'FIGHTER', 160).setOrigin(0.5)
 
     this.playText = this.add.bitmapText(centerX, centerY + 120, 'fantasy_white', 'PRESS [SPACE] TO PLAY', 50).setOrigin(0.5)
+    this.creditText = this.add.bitmapText(centerX, centerY + 160, 'fantasy_white', '[C] FOR CREDITS', 50).setOrigin(0.5)
 
     this.tweens.addCounter({
       from: 0,
@@ -68,67 +70,75 @@ class Menu extends Phaser.Scene {
     keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q)
     keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W)
     keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E)
+    keyCREDITS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C)
 
-    // animations: hero
-    this.anims.create({
-      key: 'hero_idle',
-      frameRate: 4,
-      repeat: -1,
-      frames: this.anims.generateFrameNumbers('hero_sheet', { start: 0, end: 0 }),
-    })
-    this.anims.create({
-      key: 'hero_basic',
-      frameRate: 4,
-      repeat: 0,
-      frames: this.anims.generateFrameNumbers('hero_sheet', { start: 1, end: 1 }),
-    })
-    this.anims.create({
-      key: 'hero_heavy',
-      frameRate: 4,
-      repeat: 0,
-      frames: this.anims.generateFrameNumbers('hero_sheet', { start: 3, end: 3 }),
-    })
-    this.anims.create({
-      key: 'hero_ult',
-      frameRate: 4,
-      repeat: 0,
-      frames: this.anims.generateFrameNumbers('hero_sheet', { start: 2, end: 2 }),
-    })
+    if (!restart) {
+      // animations: hero
+      this.anims.create({
+        key: 'hero_idle',
+        frameRate: 4,
+        repeat: -1,
+        frames: this.anims.generateFrameNumbers('hero_sheet', { start: 0, end: 0 }),
+      })
+      this.anims.create({
+        key: 'hero_basic',
+        frameRate: 4,
+        repeat: 0,
+        frames: this.anims.generateFrameNumbers('hero_sheet', { start: 1, end: 1 }),
+      })
+      this.anims.create({
+        key: 'hero_heavy',
+        frameRate: 4,
+        repeat: 0,
+        frames: this.anims.generateFrameNumbers('hero_sheet', { start: 3, end: 3 }),
+      })
+      this.anims.create({
+        key: 'hero_ult',
+        frameRate: 4,
+        repeat: 0,
+        frames: this.anims.generateFrameNumbers('hero_sheet', { start: 2, end: 2 }),
+      })
 
-    // animations: enemy
-    this.anims.create({
-      key: 'enemy_idle',
-      frameRate: 4,
-      repeat: -1,
-      frames: this.anims.generateFrameNumbers('enemy_sheet', { start: 0, end: 0 }),
-    })
-    this.anims.create({
-      key: 'enemy_basic',
-      frameRate: 4,
-      repeat: 0,
-      frames: this.anims.generateFrameNumbers('enemy_sheet', { start: 1, end: 1 }),
-    })
-    this.anims.create({
-      key: 'enemy_heavy',
-      frameRate: 4,
-      repeat: 0,
-      frames: this.anims.generateFrameNumbers('enemy_sheet', { start: 2, end: 2 }),
-    })
-    this.anims.create({
-      key: 'enemy_ult',
-      frameRate: 4,
-      repeat: 0,
-      frames: this.anims.generateFrameNumbers('enemy_sheet', { start: 3, end: 3 }),
-    })
+      // animations: enemy
+      this.anims.create({
+        key: 'enemy_idle',
+        frameRate: 4,
+        repeat: -1,
+        frames: this.anims.generateFrameNumbers('enemy_sheet', { start: 0, end: 0 }),
+      })
+      this.anims.create({
+        key: 'enemy_basic',
+        frameRate: 4,
+        repeat: 0,
+        frames: this.anims.generateFrameNumbers('enemy_sheet', { start: 1, end: 1 }),
+      })
+      this.anims.create({
+        key: 'enemy_heavy',
+        frameRate: 4,
+        repeat: 0,
+        frames: this.anims.generateFrameNumbers('enemy_sheet', { start: 2, end: 2 }),
+      })
+      this.anims.create({
+        key: 'enemy_ult',
+        frameRate: 4,
+        repeat: 0,
+        frames: this.anims.generateFrameNumbers('enemy_sheet', { start: 3, end: 3 }),
+      })
+    }
   }
 
   update() {
-    this.scene.start('encounterScene')
+    // this.scene.start('creditsScene')
     if (Phaser.Input.Keyboard.JustDown(cursors.space)) {
       this.sound.play('blip01', {volume: 1.0})
-      this.time.delayedCall(1000, () => {
-        // this.sound.play('blip_01', {volume: 1.0})
+      this.time.delayedCall(500, () => {
         this.scene.start('encounterScene')
+      });
+    }
+    if (Phaser.Input.Keyboard.JustDown(keyCREDITS)) {
+      this.sound.play('blip01', {volume: 1.0})
+      this.time.delayedCall(500, () => {
+        this.scene.start('creditsScene')
       });
     }
   }
