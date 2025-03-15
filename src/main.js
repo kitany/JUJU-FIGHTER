@@ -38,7 +38,7 @@ let cursors, keyQ, keyW, keyE, keySKIP, keyCREDITS
 let restart = false
 
 const HERO_ABILITY_CD = {
-  Q: 1000,
-  W: 2000,
-  E: 5000,
+  Q: 3000,
+  W: 5500,
+  E: 10000,
 }

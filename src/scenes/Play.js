@@ -21,9 +21,9 @@ class Play extends Phaser.Scene {
     this.enemy = new Enemy(this, 650, 320, 'enemy_sheet', 0)
     this.physics.add.collider(this.hero, this.enemy, (hero, enemy) => {
       if (hero.isAttacking) {
-        enemy.decreaseHealth(this, 10) // hero attacks, decrease enemy health
+        enemy.decreaseHealth(this, 5) // hero attacks, decrease enemy health
       } else if (enemy.isAttacking) {
-        hero.decreaseHealth(this, 5) // enemy attacks, decrease hero health
+        hero.decreaseHealth(this, 2) // enemy attacks, decrease hero health
       }
     })
 
@@ -102,6 +102,10 @@ class Play extends Phaser.Scene {
 
     if (this.gameOver) {
       this.clock.stop()
+
+      this.abilityQ.reset()
+      this.abilityW.reset()
+      this.abilityE.reset()
 
       this.input.keyboard.removeKey(Phaser.Input.Keyboard.KeyCodes.Q)
       this.input.keyboard.removeKey(Phaser.Input.Keyboard.KeyCodes.W)

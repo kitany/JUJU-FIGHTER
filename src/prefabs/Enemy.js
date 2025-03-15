@@ -50,14 +50,14 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
   }
 
   decreaseHealth(scene, amount) {
-    // this.health -= amount
-    // const isDead = this.hp.decrease(amount)
+    this.health -= amount
+    const isDead = this.hp.decrease(amount)
     
-    // if (this.health <= 0) {
-    //   this.isDead = true
-    // } else {
-    //   scene.enemyFSM.transition('hurt')
-    // }
+    if (this.health <= 0) {
+      this.isDead = true
+    } else {
+      scene.enemyFSM.transition('hurt')
+    }
   }
 }
 

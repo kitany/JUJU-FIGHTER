@@ -29,6 +29,24 @@ class Ability {
     this.cooldownBar.fillStyle(this.INACTIVE, this.ALPHA).setDepth(5) // grey
   }
 
+  showCooldownMessage() {
+    this.textCooldown = this.scene.add.bitmapText(350, 200, 'chocolates_white', 'Ability on cooldown!', 30)
+        .setOrigin(0.5)
+        .setAlpha(0);
+    this.textCooldown.setDepth(5);
+
+    this.scene.tweens.add({
+      targets: this.textCooldown,
+      alpha: 1,
+      y: this.textCooldown.y - 20,
+      duration: 1000,
+      ease: 'Power1',
+      yoyo: true,
+      repeat: 0,
+    });
+  }
+
+
   // Method to handle the ability activation
   activateAbility() {
     if (this.isOnCooldown) return
@@ -42,16 +60,22 @@ class Ability {
     // Set a timer to re-enable the ability after cooldown ends
     this.scene.time.delayedCall(this.cooldownTime, () => {
       this.isOnCooldown = false
-      // console.log('off cooldown')
     });
+  }
+
+  reset() {
+    this.cooldownBar.clear();
+    this.cooldownBar.fillStyle(this.ACTIVE, this.ALPHA) // violet when active
+    this.cooldownBar.fillRect(this.x, this.y, this.CD_WIDTH, this.CD_HEIGHT)
   }
 
   // Update method to check the key input and cooldown status
   update() {
     // Check if the key is pressed and the ability is not on cooldown
     if (this.key.isDown && !this.isOnCooldown) {
-      // console.log(`${this.keyChar} pressed`)
       this.activateAbility()
+    } else if (this.key.isDown && this.isOnCooldown) {
+      this.showCooldownMessage()
     }
 
     if (this.isOnCooldown) {

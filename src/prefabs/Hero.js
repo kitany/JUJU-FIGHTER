@@ -17,8 +17,10 @@ class Hero extends Phaser.Physics.Arcade.Sprite {
     this.cooldowns = {
       basic: 0,
       heavy: 0,
-      ult: 5000,
+      ult: 10000,
     }
+
+    this.scene = scene
 
     // state machine managing hero
     scene.heroFSM = new StateMachine('idle', {
@@ -55,14 +57,14 @@ class Hero extends Phaser.Physics.Arcade.Sprite {
   }
 
   decreaseHealth(scene, amount) {
-  //   this.health -= amount
-  //   const isDead = this.hp.decrease(amount)
+    this.health -= amount
+    const isDead = this.hp.decrease(amount)
     
-  //   if (this.health <= 0) {
-  //     this.isDead = true
-  //   } else {
-  //     scene.heroFSM.transition('hurt')
-  //   }
+    if (this.health <= 0) {
+      this.isDead = true
+    } else {
+      scene.heroFSM.transition('hurt')
+    }
   }
 }
 
