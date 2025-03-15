@@ -36,9 +36,9 @@ class Menu extends Phaser.Scene {
     })
 
     this.load.image('bgimg', 'img/desert_background.PNG')
-    this.load.image('basic', 'img/abilities/basic.png')
-    this.load.image('heavy', 'img/abilities/heavy.png')
-    this.load.image('ult', 'img/abilities/ult.png')
+    this.load.image('basic', 'img/basic.png')
+    this.load.image('heavy', 'img/heavy.png')
+    this.load.image('ult', 'img/ult.png')
 
     // load bitmap font
     this.load.bitmapFont('fantasy_white', 'fonts/fantasy_white.png', 'fonts/fantasy_white.xml')
