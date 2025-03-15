@@ -131,7 +131,7 @@ class Menu extends Phaser.Scene {
   }
 
   update() {
-    this.scene.start('playScene')
+    // this.scene.start('playScene')
     if (Phaser.Input.Keyboard.JustDown(cursors.space)) {
       this.sound.play('blip01', {volume: 1.0})
       this.time.delayedCall(500, () => {
