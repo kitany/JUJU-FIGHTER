@@ -1,13 +1,13 @@
-###---- ASSETS USED ----------------------------------------------------
- * AUDIO:
+## ASSETS USED
+### AUDIO:
  *  blip_01 - freesound.org/people/AceOfSpadesProduc100/sounds/341024/
  *  blip_02 - freesound.org/people/Tissman/sounds/443907/
  *  flame - freesound.org/people/ReincarnatedEchoes/sounds/680696/
  *  punch - freesound.org/people/FALL-E/sounds/712550
  *  fight - freesound.org/people/exe2be/sounds/553600/
- * BGM:
+### BGM: 
  * encounter - freesound.org/people/joshuaempyre/sounds/251461/ 
-###----- MAJOR COMPONENTS ------------------------------------------------
+## MAJOR COMPONENTS
  * 1. Physics system: JuJu Fighter uses a physics collision system to inflict
  * damage on the player or the enemy.
  * 2. Text objects: Text objects used in title screens and play scenes such as
