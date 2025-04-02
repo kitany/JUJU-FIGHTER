@@ -1,3 +1,10 @@
+# JUJU FIGHTER
+
+FINAL PROJECT FOR CMPM 120\
+Name: Kayla Nguyen\
+Game Title: *JUJU FIGHTER*\
+Project time: 50+ hours
+
 ## ASSETS USED
 ### AUDIO:
  *  blip_01 - freesound.org/people/AceOfSpadesProduc100/sounds/341024/
